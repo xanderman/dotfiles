@@ -1,0 +1,37 @@
+[user]
+  name = Bob Gardner
+  email = wrg007@gmail.com
+
+[alias]
+  stat = status
+  co = checkout
+  lol = log --pretty --oneline --decorate
+  hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+
+[merge]
+  tool = vimdiff
+
+[mergetool]
+  prompt = false
+
+[mergetool "vimdiff"]
+  cmd = vimdiff -X
+
+[diff]
+  tool = vimdiff
+
+[difftool]
+  prompt = false
+
+[core]
+  excludesfile = ~/.gitignore
+
+[color]
+  ui = true
+
+[rerere]
+  enabled = 1
+
+[branch]
+  autosetupmerge = always
+  autosetuprebase = always

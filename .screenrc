@@ -1,0 +1,10 @@
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{g}%?%+Lw%?%?%= %{g}][%{C}%Y-%m-%d %{W}%c%{g}]'
+
+altscreen on
+
+vbell off
+startup_message off
+
+autodetach on
+pow_detach_msg "Screen session of \$LOGNAME \$:cr:\$:n1:ended."

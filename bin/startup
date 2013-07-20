@@ -1,0 +1,5 @@
+#!/bin/bash
+
+xscreensaver -no-splash & disown
+~/bin/tray & disown
+/opt/google/drive/drive-sync & disown
