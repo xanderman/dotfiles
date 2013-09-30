@@ -2,11 +2,18 @@
 
 # export all system-wide variables I want inherited by applications
 
+# set PATH so it includes my private bin
+export PATH="~/.local_config/bin:~/bin:${PATH}:/usr/games"
+
+# Tell Chrome to use the proxy (system settings don't work in xmonad)
+# export auto_proxy="https://proxyconfig.corp.google.com/wpad.dat"
+
 # Get my timezone right
 export TZ="America/Denver"
 
-# Java environment setup
-export JAVA_HOME=/Library/Java/Home
-export CLASSPATH=$CLASSPATH:./
+# Local profile customization
+if [ -f ~/.local_config/profile ]; then
+    . ~/.local_config/profile
+fi
 
 export DID_PROFILE=1

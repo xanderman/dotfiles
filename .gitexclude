@@ -1,5 +1,6 @@
-/review
 *.pyc
+*.pyo
+*.o
 *~
 .nfs*
 .*.swp

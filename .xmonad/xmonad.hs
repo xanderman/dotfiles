@@ -1,11 +1,17 @@
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Layout.Grid
+import XMonad.Layout.IM
+import XMonad.Layout.PerWorkspace
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeysP)
+import Data.Ratio ((%))
 import System.IO
 
 role = stringProperty "WM_WINDOW_ROLE"
+myLayout = onWorkspace "8" (withIM (1%7) (Title "Hangouts") Grid)
+           $ (Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5))
 
 main = do
     xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar.hs"
@@ -17,7 +23,7 @@ main = do
           , className =? "Gimp"          --> doFloat
           , className =? "Calculator"    --> doFloat
           ] <+> manageDocks <+> manageHook defaultConfig
-        , layoutHook = avoidStruts  $  layoutHook defaultConfig
+        , layoutHook = avoidStruts  $  myLayout
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = hPutStrLn xmproc
                         , ppTitle = xmobarColor "green" "" . shorten 50
@@ -30,7 +36,7 @@ main = do
         [ ("M1-C-l", spawn "xscreensaver-command -lock")
         , ("C-<Print>", spawn "gnome-screenshot -a")
         , ("<Print>", spawn "gnome-screenshot")
-        , ("<XF86AudioMute>", spawn "amixer -q -c 2 set Master toggle")
-        , ("<XF86AudioLowerVolume>", spawn "amixer -q -c 2 set Master 4%-")
-        , ("<XF86AudioRaiseVolume>", spawn "amixer -q -c 2 set Master 4%+")
+        {- , ("<XF86AudioMute>", spawn "amixer -q 2 set Master toggle") -}
+        {- , ("<XF86AudioLowerVolume>", spawn "amixer -q 2 set Master 4%-") -}
+        {- , ("<XF86AudioRaiseVolume>", spawn "amixer -q 2 set Master 4%+") -}
         ]

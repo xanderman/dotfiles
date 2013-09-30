@@ -1,6 +1,9 @@
+# include should specify at least user.email
+[include]
+  path = ~/.local_config/gitconfig
+
 [user]
   name = Bob Gardner
-  email = wrg007@gmail.com
 
 [alias]
   stat = status
@@ -24,7 +27,7 @@
   prompt = false
 
 [core]
-  excludesfile = ~/.gitignore
+  excludesfile = ~/.gitexclude
 
 [color]
   ui = true

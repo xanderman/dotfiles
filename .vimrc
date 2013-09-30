@@ -1,5 +1,9 @@
 set nocompatible
-let mapleader = ","
+
+" Set mapleader to spacebar
+nnoremap <space> <nop>
+let mapleader = " "
+let maplocalleader = "\\"
 
 " Vundle management
 filetype off            " Must be set temporarily to load bundles
@@ -7,13 +11,14 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
 
-Bundle 'michaeljsmith/vim-indent-object'
-
 Bundle 'scrooloose/nerdcommenter'
 let g:NERDSpaceDelims = 1
 
+Bundle 'ciaranm/securemodelines'
+Bundle 'michaeljsmith/vim-indent-object'
 Bundle 'tpope/vim-abolish'
 Bundle 'tpope/vim-capslock'
+Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-speeddating'
 Bundle 'tpope/vim-unimpaired'
@@ -33,12 +38,11 @@ if !&diff
   if has('python')
     Bundle 'SirVer/ultisnips'
     let g:UltiSnipsEditSplit = "vertical"
-    let g:UltiSnipsListSnippets = "<c-t>"
+    let g:UltiSnipsListSnippets = "<c-l>"
   endif
 
-  if (v:version >= 703) && has('patch584') && has('python')
-    Bundle 'Valloric/YouCompleteMe'
-  endif
+  Bundle 'terryma/vim-multiple-cursors'
+  let g:multi_cursor_start_key = '<F6>'
 endif
 
 filetype plugin indent on
@@ -47,7 +51,12 @@ set background=dark     " Use brighter text color
 colorscheme elflord
 hi TabLineSel ctermfg=Green
 
-" TODO local swap files
+" Enable any local modifications
+if filereadable($HOME . '/.local_config/local.vim')
+  source ~/.local_config/local.vim
+endif
+
+source $VIMRUNTIME/macros/matchit.vim
 
 " Make sure my configs have precedence over any plugins
 set runtimepath-=~/.vim
@@ -55,34 +64,47 @@ set runtimepath^=~/.vim
 set runtimepath-=~/.vim/after
 set runtimepath+=~/.vim/after
 
-source /usr/share/vim/vim73/macros/matchit.vim
-
+set autoindent          " copy previous indent on new lines
 set backspace=indent,eol,start  " more powerful backspacing
 set cb="exclude:.*"     " never connect to the X server
 set colorcolumn+=+1,+2  " poor man's print margin
-set cursorline          " clearly markthe row with the cursor
+set cursorline          " clearly mark the row with the cursor
+set display+=lastline   " show full last line when it's long
 set esckeys             " use arrow keys in insert mode
 set expandtab           " don't replace my spaces with tab characters
+set foldlevelstart=1    " start with most folds closed
 set gdefault            " always do global search/replace
+set history=1000        " remember ALL the commands!
+set hlsearch            " Search term highlighting
 set ignorecase          " ignore case in searches
 set incsearch           " incremental search
 set magic               " extended regex
 set matchpairs+=<:>     " % jumps between <> too
-set modelines=2         " Scan first and last 2 lines for modelines
 set mouse=a             " let me use the mouse!
 set nodigraph           " don't bother me with two-byte chars
 set noerrorbells        " I hate the bell!
 set noicon              " this is a terminal, who needs icons?
 set nostartofline       " keep cursor in current column when paging
+set nowrap              " No line wrapping
+set number              " Show line numbers
 set numberwidth=3       " give just enough space for relative line numbers
+set regexpengine=1      " TODO(bobgardner): remove when new regexp engine doesn't suck
 set relativenumber      " show line numbers relative to cursor position
+set ruler               " show cursor position on bottom right
+set scrolloff=5         " always keep a few lines above/below cursor visible
+set shiftround          " round indent to nearest shiftwidth
 set shortmess=atToOsI   " use abbreviated forms for most messages
-set shiftwidth=2        " Seriously, why would I want it to be 8?
 set showcmd             " Show partial command in status line
 set showmatch           " show opening bracket for just typed closing bracket
+set sidescrolloff=5     " always keep a few columns left/right of cursor visible
 set smartcase           " match case when I put a capital letter in the search
+set smarttab            " use shiftwidth for tabs at BOL
+set tabpagemax=100      " let me have lots of tabs
+set tildeop             " treat ~ as an operator
 set title               " update the window title
 set tpm=100             " open as many tabs as I want
+set ttimeout            " short timeout for terminal characters
+set ttimeoutlen=50
 set undofile            " save undo across sessions
 set wildchar=<Tab>      " tab-completion the way I like it
 set wildmenu
@@ -95,61 +117,83 @@ hi StatusLine ctermfg=Cyan
 set laststatus=2
 set statusline=%F%m%r%w\ %y\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ %{CapsLockStatusline()}%=%l/%L,%v[%p%%]
 
-" Experimental remove trailing whitespace on edited lines
-" TODO try using the google#substitute thing
-" au InsertLeave * '[,']s/\s\+$//e
-" au InsertLeave * normal! ``
-
-" Make for nicer window/tab management
-nmap <silent> <C-h> <C-w>h
-nmap <silent> <C-j> <C-w>j
-nmap <silent> <C-k> <C-w>k
-nmap <silent> <C-l> <C-w>l
-nmap <silent> <C-n> gt
-nmap <silent> <C-p> gT
-nmap <silent> <Leader><C-n> :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
-nmap <silent> <Leader><C-p> :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
-nmap ZA :qa<CR>
-
-" Easy find/replace word under cursor
-noremap <leader>r :%s/\<<C-R><C-W>\>/
-" In visual mode find/replace last yank
-vnoremap <leader>r :s/\<<C-R>0\>/
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
+  let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
+endif
 
 " Restore cursor across sessions
 set viminfo='50,<1000,s100,/50,:50,h,n~/.vim/viminfo
-au BufReadPost * if line("'0") > 0 && line("'0") <= line("$")
-              \|   exe("norm '\"")
-              \| endif
+augroup restorecursor
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+         \|   exe("norm `\"")
+         \| endif
+augroup END
 
-" Auto-change directories
-au BufEnter * silent! lcd %:p:h
-cabbrev cdg lcd %:p:h:s?google3/.*$?google3?
+" Formatting options by filetype
+augroup formatting
+  autocmd!
+  autocmd FileType *
+        \ setlocal formatoptions-=o fo+=lj
+        \| if index(['text', 'gitcommit', 'p4-spec'], &ft) == -1
+        \|   setlocal formatoptions-=t fo+=crq
+        \| endif
+augroup END
 
-" Search term highlighting
-set hlsearch
-nnoremap <silent> <F2> :nohlsearch<CR><C-l>
+" Experimental remove trailing whitespace on edited lines
+augroup whitespace
+  autocmd!
+  autocmd InsertLeave * normal! mw
+  autocmd InsertLeave * keepjumps '[,']s/\s\+$//e
+  autocmd InsertLeave * normal! g`w
+augroup END
 
-" No line wrapping by default, but easy to toggle
-set nowrap
-map <F3> :set wrap! wrap?<CR>
+" 'write' with sudo hack
+cmap w!! w !sudo tee > /dev/null %
 
-" Recognize gitcommit files (so as to use my nifty syntax file!)
-autocmd BufNewFile,BufRead COMMIT_EDITMSG set filetype=gitcommit
+" Quickly remove search highlight without turning off the option permanently
+nnoremap <silent> <F2> :nohlsearch<CR>
 
-autocmd BufNewFile,BufRead *.go set filetype=go
+" Make for nicer window/tab management
+nnoremap <silent> <C-h> <C-w>h
+nnoremap <silent> <C-j> <C-w>j
+nnoremap <silent> <C-k> <C-w>k
+nnoremap <silent> <C-l> <C-w>l
+nnoremap <silent> <C-n> gt
+nnoremap <silent> <C-p> gT
+nnoremap <silent> <Leader><C-n> :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
+nnoremap <silent> <Leader><C-p> :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
+nnoremap ZA :qa<CR>
+
+" Close quickfix, location, and preview windows quickly
+nnoremap <silent> <F3> :cclose<CR>:lclose<CR>:pclose<CR>
+
+if &diff
+  " special settings for vimdiff
+  nnoremap <Leader>m :diffget 1<CR>
+  nnoremap <Leader>y :diffget 3<CR>
+  nnoremap <Leader>r :diffupdate<CR>
+  set diffopt+=iwhite
+else
+  " special setup for non-diff mode
+
+  " Easy find/replace word under cursor
+  noremap <leader>r :%s/\<<C-R><C-W>\>/
+  " In visual mode find/replace last yank
+  vnoremap <leader>r :s/\<<C-R>0\>/
+
+  " Auto-change directories
+  augroup chdirs
+    autocmd!
+    autocmd BufEnter * silent! lcd %:p:h
+  augroup END
+  cabbrev cdg PiperChangeDirectory
+endif
 
 " F5 toggles paste in command and edit modes
-map <F5> :se invpaste paste?<return>
+noremap <F5> :se invpaste paste?<return>
 set pastetoggle=<F5>
-
-" vimdiff tools
-if &diff
-  nmap <Leader>m :diffget 1<CR>
-  nmap <Leader>y :diffget 3<CR>
-  nmap <Leader>r :diffupdate<CR>
-  set diffopt+=iwhite
-endif
 
 " Enable spell checking, even in program source files. Hit <F4> to
 " highlight spelling errors. Hit it again to turn highlighting off. Type
@@ -159,14 +203,14 @@ endif
 " [s Previous misspelled word
 " z= Make suggestions for current word
 " zg Add to good words list
-" Turn spelling on by default for US English (which is common among
-" Googlers), so, Center is correctly spelled. Centre is not, and shows
-" with spell local colors. Completely misspelled words show like soo.
+" Turn spelling on by default for US English, so, Center is correctly spelled.
+" Centre is not, and shows with spell local colors. Completely misspelled words
+" show like soo.
 set dictionary=/usr/share/dict/american-english
 setlocal spell spelllang=en_us  " American English spelling.
 set spellfile=~/.words.utf8.add " My own word list is saved here.
 " Toggle spelling with F4 key.
-map <F4> :set spell!<CR><Bar>:echo "Spell check: " .
+noremap <F4> :set spell!<CR><Bar>:echo "Spell check: " .
   \ strpart("OffOn", 3 * &spell, 3)<CR>
 " Change the default highlighting colors and terminal attributes
 highlight SpellBad cterm=underline ctermfg=red ctermbg=blue
@@ -176,9 +220,23 @@ set spellsuggest=best,10
 set nospell
 
 " Don't let me accidentally stop vim
-map <C-Z> <C-Y>
+noremap <C-Z> <C-Y>
+
+" Quickly edit this file
+nnoremap <leader>ev :tabe $MYVIMRC<cr>
 
 " Make a simple "search" text object.
 vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
     \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
-omap s :normal vs<CR>
+onoremap s :normal vs<CR>
+
+command! -nargs=1 VC  call ExecuteVimCommandAndViewOutput(<q-args>)
+
+function! ExecuteVimCommandAndViewOutput(cmd)
+  redir @v
+    silent execute a:cmd
+  redir END
+  new
+  set buftype=nofile
+  put v
+endfunction

@@ -26,6 +26,9 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
+# Open a new firefox process
+alias ff='env MOZ_NO_REMOTE=1 firefox -ProfileManager &'
+
 # Decimal/Hex converter functions
 function h2d {
   echo "obase=10; $@" | bc
@@ -34,5 +37,10 @@ function h2d {
 function d2h {
   echo "obase=16; $@" | bc
 }
+
+# Local alias definitions
+if [ -f ~/.local_config/bash_aliases ]; then
+    . ~/.local_config/bash_aliases
+fi
 
 # vim: filetype=sh
