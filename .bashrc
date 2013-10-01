@@ -67,6 +67,11 @@ if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
+if [ -d ~/ghar ]; then
+  alias ghar=~/ghar/bin/ghar
+  . ~/ghar/ghar-bash-completion.sh
+fi
+
 # make vi my default, friendly editor
 export EDITOR=vim
 
