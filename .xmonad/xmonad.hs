@@ -9,6 +9,8 @@ import XMonad.Util.EZConfig(additionalKeysP)
 import Data.Ratio ((%))
 import System.IO
 
+import qualified LocalMods
+
 role = stringProperty "WM_WINDOW_ROLE"
 myLayout = onWorkspace "8" (withIM (1%7) (Title "Hangouts") Grid)
            $ (Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5))
@@ -32,11 +34,11 @@ main = do
         , borderWidth = 4
         , normalBorderColor = "#cccccc"
         , focusedBorderColor = "#cd8b00"
-        } `additionalKeysP`
+        } `additionalKeysP` (
         [ ("M1-C-l", spawn "xscreensaver-command -lock")
         , ("C-<Print>", spawn "gnome-screenshot -a")
         , ("<Print>", spawn "gnome-screenshot")
         {- , ("<XF86AudioMute>", spawn "amixer -q 2 set Master toggle") -}
         {- , ("<XF86AudioLowerVolume>", spawn "amixer -q 2 set Master 4%-") -}
         {- , ("<XF86AudioRaiseVolume>", spawn "amixer -q 2 set Master 4%+") -}
-        ]
+        ]  ++ LocalMods.additionalKeysP)
