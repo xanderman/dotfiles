@@ -88,7 +88,6 @@ set nostartofline       " keep cursor in current column when paging
 set nowrap              " No line wrapping
 set number              " Show line numbers
 set numberwidth=3       " give just enough space for relative line numbers
-set regexpengine=1      " TODO(bobgardner): remove when new regexp engine doesn't suck
 set relativenumber      " show line numbers relative to cursor position
 set ruler               " show cursor position on bottom right
 set scrolloff=5         " always keep a few lines above/below cursor visible
@@ -111,6 +110,11 @@ set wildmenu
 set wildmode=longest:full,full
 set ww+=<,>,[,]         " allow arrow keys to move across line boundaries
 nnoremap Y y$
+
+if exists("&regexpengine")
+  " TODO(bobgardner): remove when new regexp engine doesn't suck
+  set regexpengine=1
+endif
 
 " Status line madness
 hi StatusLine ctermfg=Cyan
