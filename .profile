@@ -3,7 +3,7 @@
 # export all system-wide variables I want inherited by applications
 
 # set PATH so it includes my private bin
-export PATH="~/.local_config/bin:~/bin:${PATH}:/usr/games"
+export PATH="$HOME/bin:$HOME/.local/bin:${PATH}:/usr/games"
 
 # Tell Chrome to use the proxy (system settings don't work in xmonad)
 # export auto_proxy="https://proxyconfig.corp.google.com/wpad.dat"

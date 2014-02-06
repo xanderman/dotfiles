@@ -6,6 +6,7 @@
   name = Bob Gardner
 
 [alias]
+  l = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
   stat = status
   co = checkout
   lol = log --pretty --oneline --decorate
