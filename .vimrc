@@ -95,7 +95,6 @@ set nostartofline       " keep cursor in current column when paging
 set nowrap              " No line wrapping
 set number              " Show line numbers
 set numberwidth=3       " give just enough space for relative line numbers
-set regexpengine=1      " TODO(bobgardner): remove when new regexp engine doesn't suck
 set relativenumber      " show line numbers relative to cursor position
 set ruler               " show cursor position on bottom right
 set scrolloff=5         " always keep a few lines above/below cursor visible
@@ -122,6 +121,11 @@ nnoremap Y y$
 " Set my preferred colors
 colorscheme elflord
 highlight TabLineSel ctermfg=Green
+
+if exists("&regexpengine")
+  " TODO(bobgardner): remove when new regexp engine doesn't suck
+  set regexpengine=1
+endif
 
 " Status line madness
 highlight StatusLine ctermfg=Cyan
