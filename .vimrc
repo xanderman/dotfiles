@@ -5,8 +5,12 @@ nnoremap <space> <nop>
 let mapleader = " "
 let maplocalleader = "\\"
 
+" filetype/syntax should be off before loading plugins and enabled afterward or
+" new stuff won't be noticed.
+filetype off
+syntax off
+
 " Vundle management
-filetype off            " Must be set temporarily to load bundles
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
@@ -15,7 +19,10 @@ Bundle 'scrooloose/nerdcommenter'
 let g:NERDSpaceDelims = 1
 
 Bundle 'ciaranm/securemodelines'
+Bundle 'Julian/vim-textobj-variable-segment'
+Bundle 'kana/vim-textobj-user'
 Bundle 'michaeljsmith/vim-indent-object'
+Bundle 'sjl/gundo.vim'
 Bundle 'tpope/vim-abolish'
 Bundle 'tpope/vim-capslock'
 Bundle 'tpope/vim-fugitive'
@@ -34,6 +41,7 @@ if !&diff
     \ 'passive_filetypes': [],
     \ }
   let g:syntastic_auto_loc_list = 1
+  let g:syntastic_check_on_wq = 0
 
   if has('python')
     Bundle 'SirVer/ultisnips'
@@ -45,18 +53,16 @@ if !&diff
   let g:multi_cursor_start_key = '<F6>'
 endif
 
-filetype plugin indent on
-syntax on
-set background=dark     " Use brighter text color
-colorscheme elflord
-hi TabLineSel ctermfg=Green
-
 " Enable any local modifications
 if filereadable($HOME . '/.local_config/local.vim')
   source ~/.local_config/local.vim
 endif
 
 source $VIMRUNTIME/macros/matchit.vim
+
+" Now that we're done loading and sourcing, turn on filetype/syntax.
+filetype plugin indent on
+syntax on
 
 " Make sure my configs have precedence over any plugins
 set runtimepath-=~/.vim
@@ -65,10 +71,11 @@ set runtimepath-=~/.vim/after
 set runtimepath+=~/.vim/after
 
 set autoindent          " copy previous indent on new lines
+set background=dark     " Use brighter text color
 set backspace=indent,eol,start  " more powerful backspacing
 set cb="exclude:.*"     " never connect to the X server
 set colorcolumn+=+1,+2  " poor man's print margin
-set cursorline          " clearly mark the row with the cursor
+set cursorline          " highlight the row with the cursor
 set display+=lastline   " show full last line when it's long
 set esckeys             " use arrow keys in insert mode
 set expandtab           " don't replace my spaces with tab characters
@@ -112,8 +119,12 @@ set wildmode=longest:full,full
 set ww+=<,>,[,]         " allow arrow keys to move across line boundaries
 nnoremap Y y$
 
+" Set my preferred colors
+colorscheme elflord
+highlight TabLineSel ctermfg=Green
+
 " Status line madness
-hi StatusLine ctermfg=Cyan
+highlight StatusLine ctermfg=Cyan
 set laststatus=2
 set statusline=%F%m%r%w\ %y\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ %{CapsLockStatusline()}%=%l/%L,%v[%p%%]
 
@@ -121,6 +132,13 @@ set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
   let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
 endif
+
+" highlight the row with the cursor only in the active window
+augroup highlightcursor
+  autocmd!
+  autocmd WinEnter * set cursorline
+  autocmd WinLeave * set nocursorline
+augroup END
 
 " Restore cursor across sessions
 set viminfo='50,<1000,s100,/50,:50,h,n~/.vim/viminfo
@@ -142,12 +160,11 @@ augroup formatting
 augroup END
 
 " Experimental remove trailing whitespace on edited lines
-augroup whitespace
-  autocmd!
-  autocmd InsertLeave * normal! mw
-  autocmd InsertLeave * keepjumps '[,']s/\s\+$//e
-  autocmd InsertLeave * normal! g`w
-augroup END
+" augroup removewhitespace
+  " autocmd!
+  " autocmd InsertLeave * keepjumps '[,']s/\s\+$//e
+  " autocmd InsertLeave * normal! g`^
+" augroup END
 
 " 'write' with sudo hack
 cmap w!! w !sudo tee > /dev/null %
@@ -188,7 +205,6 @@ else
     autocmd!
     autocmd BufEnter * silent! lcd %:p:h
   augroup END
-  cabbrev cdg PiperChangeDirectory
 endif
 
 " F5 toggles paste in command and edit modes
@@ -219,11 +235,14 @@ set spellsuggest=best,10
 " Uncomment the next line, if you wish spelling to be off by default.
 set nospell
 
-" Don't let me accidentally stop vim
-noremap <C-Z> <C-Y>
+" Instead of suspending ViM, center the cursor
+noremap <C-Z> zvzz
 
 " Quickly edit this file
-nnoremap <leader>ev :tabe $MYVIMRC<cr>
+nnoremap <leader>ev :tabe $MYVIMRC<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>
+" Execute the line under the cursor as an Ex command
+nnoremap <silent> <leader>ex :yank<CR>:@"<CR>
 
 " Make a simple "search" text object.
 vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
@@ -233,10 +252,10 @@ onoremap s :normal vs<CR>
 command! -nargs=1 VC  call ExecuteVimCommandAndViewOutput(<q-args>)
 
 function! ExecuteVimCommandAndViewOutput(cmd)
-  redir @v
-    silent execute a:cmd
-  redir END
+  let @v = maktaba#command#GetOutput(a:cmd)
   new
   set buftype=nofile
   put v
 endfunction
+
+nnoremap <F6> :GundoToggle<CR>
