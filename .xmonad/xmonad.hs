@@ -19,11 +19,12 @@ main = do
     xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar.hs"
     xmonad $ defaultConfig
         { manageHook = composeAll
-          {- [ className =? "Google-chrome" --> doFloat -}
+          {- Use xprop to find the WM_CLASS for 'className' matches -}
           [ role =? "pop-up" --> doFloat
           , className =? "Gnobots2"      --> doFloat
           , className =? "Gimp"          --> doFloat
           , className =? "Calculator"    --> doFloat
+          , className =? "Lightsoff"    --> doFloat
           ] <+> manageDocks <+> manageHook defaultConfig
         , layoutHook = avoidStruts  $  myLayout
         , logHook = dynamicLogWithPP xmobarPP
@@ -31,6 +32,7 @@ main = do
                         , ppTitle = xmobarColor "green" "" . shorten 50
                         }
         , modMask = mod4Mask    -- Rebind Mod to the Windows key
+        , terminal = "urxvt"    -- Use urxvt terminal
         , borderWidth = 4
         , normalBorderColor = "#cccccc"
         , focusedBorderColor = "#cd8b00"
