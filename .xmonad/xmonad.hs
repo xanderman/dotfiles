@@ -4,7 +4,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
 import XMonad.Layout.PerWorkspace
-import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.Run(safeSpawn, spawnPipe)
 import XMonad.Util.EZConfig(additionalKeysP)
 import Data.Ratio ((%))
 import System.IO
@@ -37,10 +37,10 @@ main = do
         , normalBorderColor = "#cccccc"
         , focusedBorderColor = "#cd8b00"
         } `additionalKeysP` (
-        [ ("M1-C-l", spawn "xscreensaver-command -lock")
-        , ("C-<Print>", spawn "gnome-screenshot -a")
-        , ("<Print>", spawn "gnome-screenshot")
-        {- , ("<XF86AudioMute>", spawn "amixer -q 2 set Master toggle") -}
-        {- , ("<XF86AudioLowerVolume>", spawn "amixer -q 2 set Master 4%-") -}
-        {- , ("<XF86AudioRaiseVolume>", spawn "amixer -q 2 set Master 4%+") -}
+        [ ("M1-C-l", safeSpawn "xscreensaver-command" ["-lock"])
+        , ("C-<Print>", safeSpawn "gnome-screenshot" ["-a"])
+        , ("<Print>", safeSpawn "gnome-screenshot" [])
+        {- , ("<XF86AudioMute>", safeSpawn "amixer -q 2 set Master toggle") -}
+        {- , ("<XF86AudioLowerVolume>", safeSpawn "amixer -q 2 set Master 4%-") -}
+        {- , ("<XF86AudioRaiseVolume>", safeSpawn "amixer -q 2 set Master 4%+") -}
         ]  ++ LocalMods.additionalKeysP)

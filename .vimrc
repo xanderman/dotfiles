@@ -43,11 +43,10 @@ if !&diff
   let g:syntastic_auto_loc_list = 1
   let g:syntastic_check_on_wq = 0
 
-  if has('python')
-    Bundle 'SirVer/ultisnips'
-    let g:UltiSnipsEditSplit = "vertical"
-    let g:UltiSnipsListSnippets = "<c-l>"
-  endif
+  Bundle 'SirVer/ultisnips'
+  let g:UltiSnipsEditSplit = "vertical"
+  let g:UltiSnipsListSnippets = "<c-l>"
+  Bundle 'honza/vim-snippets'
 
   Bundle 'terryma/vim-multiple-cursors'
   let g:multi_cursor_start_key = '<F6>'
@@ -105,6 +104,7 @@ set showmatch           " show opening bracket for just typed closing bracket
 set sidescrolloff=5     " always keep a few columns left/right of cursor visible
 set smartcase           " match case when I put a capital letter in the search
 set smarttab            " use shiftwidth for tabs at BOL
+set splitright          " new vsplit window on right
 set tabpagemax=100      " let me have lots of tabs
 set tildeop             " treat ~ as an operator
 set title               " update the window title
