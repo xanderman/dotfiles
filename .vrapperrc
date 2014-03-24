@@ -1,0 +1,23 @@
+set smartcase
+set hlsearch
+set incsearch
+set cursorline
+set scrolloff=5
+set softtabstop=2
+set tabstop=2
+set shiftwidth=2
+
+set saney
+set contentassistmode
+
+nnoremap <F2> :nohlsearch<CR>
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+nnoremap <C-n> gt
+nnoremap <C-p> gT
+
+vmap gw :fm<CR>
+vmap gq :fm<CR>
+
+eclipseaction findref org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace
+nmap gr :findref<CR>
