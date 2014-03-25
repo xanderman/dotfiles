@@ -13,28 +13,28 @@ syntax off
 " Vundle management
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/vundle'
 
-Bundle 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdcommenter'
 let g:NERDSpaceDelims = 1
 
-Bundle 'ciaranm/securemodelines'
-Bundle 'Julian/vim-textobj-variable-segment'
-Bundle 'kana/vim-textobj-user'
-Bundle 'michaeljsmith/vim-indent-object'
-Bundle 'sjl/gundo.vim'
-Bundle 'tpope/vim-abolish'
-Bundle 'tpope/vim-capslock'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-markdown'
-Bundle 'tpope/vim-speeddating'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'Valloric/MatchTagAlways'
+Plugin 'ciaranm/securemodelines'
+Plugin 'Julian/vim-textobj-variable-segment'
+Plugin 'kana/vim-textobj-user'
+Plugin 'michaeljsmith/vim-indent-object'
+Plugin 'sjl/gundo.vim'
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-capslock'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-speeddating'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'Valloric/MatchTagAlways'
 
 " Only load some bundles if diff mode is off
 if !&diff
-  Bundle 'tomtom/quickfixsigns_vim'
-  Bundle 'scrooloose/syntastic'
+  Plugin 'tomtom/quickfixsigns_vim'
+  Plugin 'scrooloose/syntastic'
   let g:syntastic_mode_map = {
     \ 'mode': 'passive',
     \ 'active_filetypes': ['java', 'python'],
@@ -43,12 +43,12 @@ if !&diff
   let g:syntastic_auto_loc_list = 1
   let g:syntastic_check_on_wq = 0
 
-  Bundle 'SirVer/ultisnips'
+  Plugin 'SirVer/ultisnips'
   let g:UltiSnipsEditSplit = "vertical"
   let g:UltiSnipsListSnippets = "<c-l>"
-  Bundle 'honza/vim-snippets'
+  Plugin 'honza/vim-snippets'
 
-  Bundle 'terryma/vim-multiple-cursors'
+  Plugin 'terryma/vim-multiple-cursors'
   let g:multi_cursor_start_key = '<F6>'
 endif
 
