@@ -80,8 +80,7 @@ export LESS="-RSMqi"
 
 # Function to call from ~/.local_config/bashrc to enforce a global tmux session
 function __enable_global_tmux_session {
-  if [[ "$TERM" != screen* ]]
-  then
+  if [ -z "$TMUX" ]; then
     session_id=`date +%Y%m%d%H%M%S`
     # Try to start a new session grouped with the global one, which will be
     # destroyed on detach. Otherwise, start the global session.

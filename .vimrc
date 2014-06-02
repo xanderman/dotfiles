@@ -11,9 +11,9 @@ filetype off
 syntax off
 
 " Vundle management
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Plugin 'gmarik/vundle'
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'gmarik/Vundle.vim'
 
 Plugin 'scrooloose/nerdcommenter'
 let g:NERDSpaceDelims = 1
@@ -27,11 +27,13 @@ Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-capslock'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-speeddating'
+Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'Valloric/MatchTagAlways'
 
-" Only load some bundles if diff mode is off
+" Only load some plugins if diff mode is off
 if !&diff
   Plugin 'tomtom/quickfixsigns_vim'
   Plugin 'scrooloose/syntastic'
@@ -60,24 +62,33 @@ endif
 source $VIMRUNTIME/macros/matchit.vim
 
 " Now that we're done loading and sourcing, turn on filetype/syntax.
+call vundle#end()
 filetype plugin indent on
 syntax on
 
 " Make sure my configs have precedence over any plugins
+" This really shouldn't be necessary, but sometimes plugin managers get it wrong
 set runtimepath-=~/.vim
 set runtimepath^=~/.vim
 set runtimepath-=~/.vim/after
 set runtimepath+=~/.vim/after
 
+" Put all my autocmds in the same group
+" DO NOT source anything after this point!
+augroup myvimrc
+autocmd!
+
 set autoindent          " copy previous indent on new lines
 set background=dark     " Use brighter text color
 set backspace=indent,eol,start  " more powerful backspacing
-set cb="exclude:.*"     " never connect to the X server
+set clipboard="exclude:.*"      " never connect to the X server
 set colorcolumn+=+1,+2  " poor man's print margin
 set cursorline          " highlight the row with the cursor
+set diffopt+=iwhite     " ignore trailing whitespace in diffs
 set display+=lastline   " show full last line when it's long
 set esckeys             " use arrow keys in insert mode
 set expandtab           " don't replace my spaces with tab characters
+set foldcolumn=2        " show me where the folds are in the gutter
 set foldlevelstart=1    " start with most folds closed
 set gdefault            " always do global search/replace
 set history=1000        " remember ALL the commands!
@@ -122,8 +133,8 @@ nnoremap Y y$
 colorscheme elflord
 highlight TabLineSel ctermfg=Green
 
+" TODO(bobgardner): remove when new regexp engine doesn't suck
 if exists("&regexpengine")
-  " TODO(bobgardner): remove when new regexp engine doesn't suck
   set regexpengine=1
 endif
 
@@ -138,43 +149,32 @@ if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
 endif
 
 " highlight the row with the cursor only in the active window
-augroup highlightcursor
-  autocmd!
-  autocmd WinEnter * set cursorline
-  autocmd WinLeave * set nocursorline
-augroup END
+autocmd WinEnter * set cursorline
+autocmd WinLeave * set nocursorline
 
 " Restore cursor across sessions
 set viminfo='50,<1000,s100,/50,:50,h,n~/.vim/viminfo
-augroup restorecursor
-  autocmd!
-  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-         \|   exe("norm `\"")
-         \| endif
-augroup END
+autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+        \|   exe("norm `\"")
+        \| endif
 
 " Formatting options by filetype
-augroup formatting
-  autocmd!
-  autocmd FileType *
-        \ setlocal formatoptions-=o fo+=lj
-        \| if index(['text', 'gitcommit', 'p4-spec'], &ft) == -1
-        \|   setlocal formatoptions-=t fo+=crq
-        \| endif
-augroup END
+autocmd FileType *
+      \ setlocal formatoptions-=o fo+=lj
+      \| if index(['text', 'gitcommit', 'p4-spec'], &ft) == -1
+      \|   setlocal formatoptions-=t fo+=crq
+      \| endif
 
 " Experimental remove trailing whitespace on edited lines
-" augroup removewhitespace
-  " autocmd!
-  " autocmd InsertLeave * keepjumps '[,']s/\s\+$//e
-  " autocmd InsertLeave * normal! g`^
-" augroup END
+" autocmd InsertLeave * keepjumps '[,']s/\s\+$//e
+" autocmd InsertLeave * normal! g`^
 
 " 'write' with sudo hack
 cmap w!! w !sudo tee > /dev/null %
 
 " Quickly remove search highlight without turning off the option permanently
 nnoremap <silent> <F2> :nohlsearch<CR>
+nnoremap <silent> <CR> :nohlsearch<CR>
 
 " Make for nicer window/tab management
 nnoremap <silent> <C-h> <C-w>h
@@ -195,7 +195,6 @@ if &diff
   nnoremap <Leader>m :diffget 1<CR>
   nnoremap <Leader>y :diffget 3<CR>
   nnoremap <Leader>r :diffupdate<CR>
-  set diffopt+=iwhite
 else
   " special setup for non-diff mode
 
@@ -205,15 +204,13 @@ else
   vnoremap <leader>r :s/\<<C-R>0\>/
 
   " Auto-change directories
-  augroup chdirs
-    autocmd!
-    autocmd BufEnter * silent! lcd %:p:h
-  augroup END
+  autocmd BufEnter * silent! lcd %:p:h
 endif
 
 " F5 toggles paste in command and edit modes
-noremap <F5> :se invpaste paste?<return>
+noremap <F5> :set invpaste paste?<return>
 set pastetoggle=<F5>
+autocmd InsertLeave * set nopaste
 
 " Enable spell checking, even in program source files. Hit <F4> to
 " highlight spelling errors. Hit it again to turn highlighting off. Type
@@ -262,4 +259,18 @@ function! ExecuteVimCommandAndViewOutput(cmd)
   put v
 endfunction
 
+nnoremap U <C-r>
 nnoremap <F6> :GundoToggle<CR>
+
+" Always open readonly when a swap file exists, and warn me gently
+autocmd SwapExists * let v:swapchoice = 'o'
+autocmd VimEnter * call WarnSwapFile()
+
+function! WarnSwapFile() abort
+  if v:swapchoice isnot ''
+    call maktaba#error#Warn('Swap file exists; opened readonly')
+  endif
+endfunction
+
+" Make sure this remains the last line!
+augroup END
