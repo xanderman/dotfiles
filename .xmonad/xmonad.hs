@@ -50,8 +50,7 @@ main = do
         , focusedBorderColor = "#cd8b00"
         , keys = myKeys <+> keys defaultConfig
         } `additionalKeysP` (
-        [ ("M1-C-l", safeSpawn "xscreensaver-command" ["-lock"])
-        , ("C-<Print>", safeSpawn "gnome-screenshot" ["-a"])
+        [ ("C-<Print>", safeSpawn "gnome-screenshot" ["-a"])
         , ("<Print>", safeSpawn "gnome-screenshot" [])
         {- , ("<XF86AudioMute>", safeSpawn "amixer -q 2 set Master toggle") -}
         {- , ("<XF86AudioLowerVolume>", safeSpawn "amixer -q 2 set Master 4%-") -}

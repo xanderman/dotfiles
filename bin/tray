@@ -1,5 +1,5 @@
 #!/bin/bash
 
 trayer --edge bottom --align right --SetDockType true --SetPartialStrut true \
-  --expand true --width 5 --widthtype percent --height 17 --heighttype pixel \
+  --expand true --width 10 --widthtype percent --height 17 --heighttype pixel \
   --transparent true --tint 0x000000
