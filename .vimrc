@@ -15,16 +15,17 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
-Plugin 'scrooloose/nerdcommenter'
-let g:NERDSpaceDelims = 1
-
+Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ciaranm/securemodelines'
 Plugin 'Julian/vim-textobj-variable-segment'
 Plugin 'kana/vim-textobj-user'
 Plugin 'michaeljsmith/vim-indent-object'
+Plugin 'nacitar/terminalkeys.vim'
 Plugin 'sjl/gundo.vim'
+Plugin 'tommcdo/vim-lion'
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-capslock'
+Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-markdown'
 Plugin 'tpope/vim-repeat'

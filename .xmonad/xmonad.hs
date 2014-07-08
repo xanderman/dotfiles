@@ -1,9 +1,11 @@
 import XMonad
 import XMonad.Actions.CopyWindow
+import XMonad.Actions.GridSelect
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
+import XMonad.Layout.LayoutHints
 import XMonad.Layout.PerWorkspace
 import XMonad.Util.Run(safeSpawn, spawnPipe)
 import XMonad.Util.EZConfig(additionalKeysP)
@@ -15,8 +17,9 @@ import qualified Data.Map as M
 import qualified LocalMods
 
 role = stringProperty "WM_WINDOW_ROLE"
-myLayout = onWorkspace "8" (withIM (1%7) (Title "Hangouts") Grid)
-           $ (Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5))
+myLayout = Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5)
+{- myLayout = onWorkspace "8" (layoutHintsWithPlacement (0,0) $ withIM (1%7) (Title "Hangouts") $ Grid) -}
+           {- $ (Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5)) -}
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         [ ((m .|. modm, k), windows $ f i)
             | (i, k) <- zip (workspaces conf) [xK_1 .. xK_9]
@@ -24,6 +27,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         [ ((modm .|. shiftMask, xK_c), kill1)
         , ((modm .|. shiftMask, xK_0), windows copyToAll) -- mod+shit+0 to make window always visible
         , ((modm, xK_0), killAllOtherCopies) -- mod+0 to undo
+        , ((modm, xK_a), goToSelected defaultGSConfig)
+        , ((modm, xK_s), spawnSelected defaultGSConfig ["xterm","google-chrome-beta","gvim"])
         ]
 
 main = do
