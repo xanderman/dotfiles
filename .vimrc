@@ -213,6 +213,11 @@ noremap <F5> :set invpaste paste?<return>
 set pastetoggle=<F5>
 autocmd InsertLeave * set nopaste
 
+" Use +/- for increment/decrement
+" intentionally allow remap because vim-speeddating does awesome things
+nmap + <C-A>
+nmap - <C-X>
+
 " Enable spell checking, even in program source files. Hit <F4> to
 " highlight spelling errors. Hit it again to turn highlighting off. Type
 "     :help spell

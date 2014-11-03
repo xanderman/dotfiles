@@ -8,9 +8,10 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
                     , Run Date "%a %b %_d %k:%M" "date" 10
+                    , Run Battery ["-t", "<acstatus>: <left>%", "--", "-O", "AC", "-o", "Bat", "-h", "green", "-l", "red"] 10
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% } %cpu% | %memory% * %swap% { <fc=#ee9a00>%date%</fc> | %KBJC%"
+       , template = "%StdinReader% } %battery% | %cpu% | %memory% * %swap% { <fc=#ee9a00>%date%</fc> | %KBJC%"
        }

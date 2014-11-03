@@ -6,6 +6,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
 import XMonad.Layout.LayoutHints
+import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
 import XMonad.Util.Run(safeSpawn, spawnPipe)
 import XMonad.Util.EZConfig(additionalKeysP)
@@ -17,7 +18,7 @@ import qualified Data.Map as M
 import qualified LocalMods
 
 role = stringProperty "WM_WINDOW_ROLE"
-myLayout = Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5)
+myLayout = noBorders Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5)
 {- myLayout = onWorkspace "8" (layoutHintsWithPlacement (0,0) $ withIM (1%7) (Title "Hangouts") $ Grid) -}
            {- $ (Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5)) -}
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
