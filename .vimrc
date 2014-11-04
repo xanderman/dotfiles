@@ -15,6 +15,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ciaranm/securemodelines'
 Plugin 'Julian/vim-textobj-variable-segment'
@@ -130,14 +131,15 @@ set wildmode=longest:full,full
 set ww+=<,>,[,]         " allow arrow keys to move across line boundaries
 nnoremap Y y$
 
-" Set my preferred colors
-colorscheme elflord
-highlight TabLineSel ctermfg=Green
 
 " TODO(bobgardner): remove when new regexp engine doesn't suck
 if exists("&regexpengine")
   set regexpengine=1
 endif
+
+" Set my preferred colors
+colorscheme solarized
+highlight TabLineSel ctermfg=Green
 
 " Status line madness
 highlight StatusLine ctermfg=Cyan

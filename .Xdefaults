@@ -1,9 +1,3 @@
-URxvt.background:       #000000
-URxvt.foreground:       gray90
-URxvt.color7:           gray90
-URxvt.colorBD:          #ffffff
-URxvt.throughColor:     #8080f0
-URxvt.highlightColor:   #f0f0f0
 URxvt.scrollBar:        false
 URxvt.print-pipe:       cat > $(TMPDIR=$HOME mktemp urxvt.XXXXXX)
 URxvt*visualBell:       false
