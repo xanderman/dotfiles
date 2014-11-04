@@ -131,6 +131,30 @@ set wildmode=longest:full,full
 set ww+=<,>,[,]         " allow arrow keys to move across line boundaries
 nnoremap Y y$
 
+" Put swap/undo/backup files in /tmp
+let s:local_swap_dir_root = '/tmp/vim_tmp/'
+if !isdirectory(s:local_swap_dir_root)
+  call mkdir(s:local_swap_dir_root, '', 01777)
+endif
+if filewritable(s:local_swap_dir_root) == 2  " If it's a directory
+  let s:swap_dir = s:local_swap_dir_root . $LOGNAME . '/swap'
+  if !isdirectory(s:swap_dir)
+    call mkdir(s:swap_dir, 'p', 0700)
+  endif
+  execute 'set directory^=' . s:swap_dir . '//'
+
+  let s:backup_dir = s:local_swap_dir_root . $LOGNAME . '/backup'
+  if !isdirectory(s:backup_dir)
+    call mkdir(s:backup_dir, 'p', 0700)
+  endif
+  execute 'set backupdir^=' . s:backup_dir
+
+  let s:undo_dir = s:local_swap_dir_root . $LOGNAME . '/undo'
+  if !isdirectory(s:undo_dir)
+    call mkdir(s:undo_dir, 'p', 0700)
+  endif
+  execute 'set undodir^=' . s:undo_dir
+endif
 
 " TODO(bobgardner): remove when new regexp engine doesn't suck
 if exists("&regexpengine")

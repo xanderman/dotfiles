@@ -67,6 +67,11 @@ if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
+if [ -d ~/src/ghar ]; then
+  alias ghar=~/src/ghar/bin/ghar
+  . ~/src/ghar/ghar-bash-completion.sh
+fi
+
 if [ -d ~/ghar ]; then
   alias ghar=~/ghar/bin/ghar
   . ~/ghar/ghar-bash-completion.sh
