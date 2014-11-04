@@ -96,6 +96,22 @@ function __enable_global_tmux_session {
   fi
 }
 
+# Function to update a shell inside tmux with new environment variables
+# (really useful for switching between ssh and local)
+function update-environment {
+  local v
+  while read v; do
+    if [[ $v == -* ]]; then
+      unset ${v/#-/}
+    else
+      # Surround value with quotes
+      v=${v/=/=\"}
+      v=${v/%/\"}
+      eval export $v
+    fi
+  done < <(tmux show-environment)
+}
+
 # Local bashrc customization
 if [ -f ~/.local_config/bashrc ]; then
     . ~/.local_config/bashrc

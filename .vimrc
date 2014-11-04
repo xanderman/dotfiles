@@ -10,6 +10,14 @@ let maplocalleader = "\\"
 filetype off
 syntax off
 
+" At work I don't use vimdiff directly, but instead use a script to handle a
+" multi-file diff with tabs. Conveniently the SCM passes ':' as the first
+" argument when multi-file diff is enabled.
+let s:diff_mode = 0
+if &diff || argv(0) == ':'
+  let s:diff_mode = 1
+endif
+
 " Vundle management
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -18,16 +26,17 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ciaranm/securemodelines'
+" Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'Julian/vim-textobj-variable-segment'
 Plugin 'kana/vim-textobj-user'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'nacitar/terminalkeys.vim'
 Plugin 'sjl/gundo.vim'
 Plugin 'tommcdo/vim-lion'
+Plugin 'tomtom/quickfixsigns_vim'
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-capslock'
 Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-markdown'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-speeddating'
@@ -35,25 +44,26 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'Valloric/MatchTagAlways'
 
-" Only load some plugins if diff mode is off
-if !&diff
-  Plugin 'tomtom/quickfixsigns_vim'
-  Plugin 'scrooloose/syntastic'
-  let g:syntastic_mode_map = {
-    \ 'mode': 'passive',
-    \ 'active_filetypes': ['java', 'python'],
-    \ 'passive_filetypes': [],
-    \ }
-  let g:syntastic_auto_loc_list = 1
-  let g:syntastic_check_on_wq = 0
+" Plugins with settings
+" Plugin 'mhinz/vim-signify'
+" let g:signify_vcs_list = ['perforce', 'git', 'subversion', 'mercurial']
 
-  Plugin 'SirVer/ultisnips'
-  let g:UltiSnipsEditSplit = "vertical"
-  let g:UltiSnipsListSnippets = "<c-l>"
-  Plugin 'honza/vim-snippets'
+Plugin 'scrooloose/syntastic'
+let g:syntastic_mode_map = {
+  \ 'mode': 'passive',
+  \ 'active_filetypes': ['java', 'python'],
+  \ 'passive_filetypes': [],
+  \ }
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_wq = 0
 
-  Plugin 'terryma/vim-multiple-cursors'
-  let g:multi_cursor_start_key = '<F6>'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+let g:UltiSnipsEditSplit = "vertical"
+let g:UltiSnipsListSnippets = "<c-l>"
+
+if !s:diff_mode
+  Plugin 'bogado/file-line'
 endif
 
 " Enable any local modifications
@@ -87,6 +97,7 @@ set clipboard="exclude:.*"      " never connect to the X server
 set colorcolumn+=+1,+2  " poor man's print margin
 set cursorline          " highlight the row with the cursor
 set diffopt+=iwhite     " ignore trailing whitespace in diffs
+set diffopt+=vertical   " always split diff windows vertically
 set display+=lastline   " show full last line when it's long
 set esckeys             " use arrow keys in insert mode
 set expandtab           " don't replace my spaces with tab characters
@@ -212,12 +223,14 @@ nnoremap <silent> <C-n> gt
 nnoremap <silent> <C-p> gT
 nnoremap <silent> <Leader><C-n> :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
 nnoremap <silent> <Leader><C-p> :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
+nnoremap <silent> <Leader>gt :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
+nnoremap <silent> <Leader>gT :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
 nnoremap ZA :qa<CR>
 
 " Close quickfix, location, and preview windows quickly
 nnoremap <silent> <F3> :cclose<CR>:lclose<CR>:pclose<CR>
 
-if &diff
+if s:diff_mode
   " special settings for vimdiff
   nnoremap <Leader>m :diffget 1<CR>
   nnoremap <Leader>y :diffget 3<CR>
