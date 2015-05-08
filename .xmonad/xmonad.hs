@@ -3,13 +3,14 @@ import XMonad.Actions.CopyWindow
 import XMonad.Actions.GridSelect
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
-import XMonad.Util.Run(safeSpawn, spawnPipe)
-import XMonad.Util.EZConfig(additionalKeysP)
+import XMonad.Util.Run (safeSpawn, spawnPipe)
+import XMonad.Util.EZConfig (additionalKeysP)
 import Data.Ratio ((%))
 import System.IO
 
@@ -21,6 +22,22 @@ role = stringProperty "WM_WINDOW_ROLE"
 myLayout = noBorders Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5)
 {- myLayout = onWorkspace "8" (layoutHintsWithPlacement (0,0) $ withIM (1%7) (Title "Hangouts") $ Grid) -}
            {- $ (Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5)) -}
+
+myManageHook = composeAll
+        {- Use xprop to find the WM_CLASS for 'className' matches -}
+        [ role =? "pop-up"                                    --> doCenterFloat
+        , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd"   --> (doF W.focusDown <+> doCopyToAll)
+        , className =? "Gnobots2"                             --> doFloat
+        , className =? "Gimp"                                 --> doFloat
+        , className =? "Calculator"                           --> doFloat
+        , className =? "Lightsoff"                            --> doFloat
+        , title =? "jDip"                                     --> doFloat
+        ] <+> manageDocks <+> manageHook defaultConfig
+        where
+            doCopyToAll = ask >>= doF . \w -> (\ws -> foldr($) ws (map (copyWindow w) myWorkspaces))
+
+myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         [ ((m .|. modm, k), windows $ f i)
             | (i, k) <- zip (workspaces conf) [xK_1 .. xK_9]
@@ -35,15 +52,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 main = do
     xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar.hs"
     xmonad $ defaultConfig
-        { manageHook = composeAll
-          {- Use xprop to find the WM_CLASS for 'className' matches -}
-          [ role =? "pop-up" --> doFloat
-          , className =? "Gnobots2"      --> doFloat
-          , className =? "Gimp"          --> doFloat
-          , className =? "Calculator"    --> doFloat
-          , className =? "Lightsoff"    --> doFloat
-          , title =? "jDip" --> doFloat
-          ] <+> manageDocks <+> manageHook defaultConfig
+        { manageHook = myManageHook
         , layoutHook = avoidStruts  $  myLayout
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = hPutStrLn xmproc
@@ -54,6 +63,7 @@ main = do
         , borderWidth = 4
         , normalBorderColor = "#cccccc"
         , focusedBorderColor = "#cd8b00"
+        , workspaces = myWorkspaces
         , keys = myKeys <+> keys defaultConfig
         } `additionalKeysP` (
         [ ("C-<Print>", safeSpawn "gnome-screenshot" ["-a"])
