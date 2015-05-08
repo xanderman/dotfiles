@@ -27,11 +27,18 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ciaranm/securemodelines'
 " Plugin 'ConradIrwin/vim-bracketed-paste'
+Plugin 'drmikehenry/vim-fixkey'
 Plugin 'Julian/vim-textobj-variable-segment'
+Plugin 'kana/vim-textobj-function'
+Plugin 'kana/vim-textobj-indent'
+Plugin 'kana/vim-textobj-lastpat'
+Plugin 'kana/vim-textobj-line'
 Plugin 'kana/vim-textobj-user'
-Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'nacitar/terminalkeys.vim'
 Plugin 'sjl/gundo.vim'
+Plugin 'sjl/splice.vim'
+Plugin 'theevocater/vim-perforce'
+Plugin 'tommcdo/vim-exchange'
 Plugin 'tommcdo/vim-lion'
 Plugin 'tomtom/quickfixsigns_vim'
 Plugin 'tpope/vim-abolish'
@@ -43,10 +50,12 @@ Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'Valloric/MatchTagAlways'
+Plugin 'vim-scripts/argtextobj.vim'
+Plugin 'google/vim-syncopate'
 
 " Plugins with settings
-" Plugin 'mhinz/vim-signify'
-" let g:signify_vcs_list = ['perforce', 'git', 'subversion', 'mercurial']
+Plugin 'mhinz/vim-signify'
+let g:signify_vcs_list = ['perforce', 'git', 'hg', 'svn']
 
 Plugin 'scrooloose/syntastic'
 let g:syntastic_mode_map = {
@@ -61,10 +70,6 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 let g:UltiSnipsEditSplit = "vertical"
 let g:UltiSnipsListSnippets = "<c-l>"
-
-if !s:diff_mode
-  Plugin 'bogado/file-line'
-endif
 
 " Enable any local modifications
 if filereadable($HOME . '/.local_config/local.vim')
@@ -93,7 +98,7 @@ autocmd!
 set autoindent          " copy previous indent on new lines
 set background=dark     " Use brighter text color
 set backspace=indent,eol,start  " more powerful backspacing
-set clipboard="exclude:.*"      " never connect to the X server
+set clipboard=exclude:.*      " never connect to the X server
 set colorcolumn+=+1,+2  " poor man's print margin
 set cursorline          " highlight the row with the cursor
 set diffopt+=iwhite     " ignore trailing whitespace in diffs
@@ -130,7 +135,6 @@ set smartcase           " match case when I put a capital letter in the search
 set smarttab            " use shiftwidth for tabs at BOL
 set splitright          " new vsplit window on right
 set tabpagemax=100      " let me have lots of tabs
-set tildeop             " treat ~ as an operator
 set title               " update the window title
 set tpm=100             " open as many tabs as I want
 set ttimeout            " short timeout for terminal characters
@@ -173,6 +177,7 @@ if exists("&regexpengine")
 endif
 
 " Set my preferred colors
+let g:solarized_termcolors=16
 colorscheme solarized
 highlight TabLineSel ctermfg=Green
 
@@ -203,6 +208,9 @@ autocmd FileType *
       \|   setlocal formatoptions-=t fo+=crq
       \| endif
 
+" Temporary hack to use theevocater/vim-perforce for p4 client specs
+autocmd FileType p4-spec set filetype=p4client
+
 " Experimental remove trailing whitespace on edited lines
 " autocmd InsertLeave * keepjumps '[,']s/\s\+$//e
 " autocmd InsertLeave * normal! g`^
@@ -215,14 +223,14 @@ nnoremap <silent> <F2> :nohlsearch<CR>
 nnoremap <silent> <CR> :nohlsearch<CR>
 
 " Make for nicer window/tab management
-nnoremap <silent> <C-h> <C-w>h
-nnoremap <silent> <C-j> <C-w>j
-nnoremap <silent> <C-k> <C-w>k
-nnoremap <silent> <C-l> <C-w>l
-nnoremap <silent> <C-n> gt
-nnoremap <silent> <C-p> gT
-nnoremap <silent> <Leader><C-n> :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
-nnoremap <silent> <Leader><C-p> :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
+nnoremap <silent> <M-h> <C-w>h
+nnoremap <silent> <M-j> <C-w>j
+nnoremap <silent> <M-k> <C-w>k
+nnoremap <silent> <M-l> <C-w>l
+nnoremap <silent> <M-n> gt
+nnoremap <silent> <M-p> gT
+nnoremap <silent> <Leader><M-n> :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
+nnoremap <silent> <Leader><M-p> :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
 nnoremap <silent> <Leader>gt :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
 nnoremap <silent> <Leader>gT :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
 nnoremap ZA :qa<CR>
@@ -231,10 +239,12 @@ nnoremap ZA :qa<CR>
 nnoremap <silent> <F3> :cclose<CR>:lclose<CR>:pclose<CR>
 
 if s:diff_mode
+  " TODO: rethink this for multidiff, where the buffer numbers aren't
+  " predictable
   " special settings for vimdiff
-  nnoremap <Leader>m :diffget 1<CR>
-  nnoremap <Leader>y :diffget 3<CR>
-  nnoremap <Leader>r :diffupdate<CR>
+  " nnoremap <Leader>m :diffget 1<CR>
+  " nnoremap <Leader>y :diffget 3<CR>
+  " nnoremap <Leader>r :diffupdate<CR>
 else
   " special setup for non-diff mode
 
@@ -269,7 +279,7 @@ nmap - <C-X>
 " Centre is not, and shows with spell local colors. Completely misspelled words
 " show like soo.
 set dictionary=/usr/share/dict/american-english
-setlocal spell spelllang=en_us  " American English spelling.
+set spelllang^=en_us  " American English spelling first
 set spellfile=~/.words.utf8.add " My own word list is saved here.
 " Toggle spelling with F4 key.
 noremap <F4> :set spell!<CR><Bar>:echo "Spell check: " .
@@ -278,8 +288,6 @@ noremap <F4> :set spell!<CR><Bar>:echo "Spell check: " .
 highlight SpellBad cterm=underline ctermfg=red ctermbg=blue
 " Limit list of suggestions to the top 10 items
 set spellsuggest=best,10
-" Uncomment the next line, if you wish spelling to be off by default.
-set nospell
 
 " Instead of suspending ViM, center the cursor
 noremap <C-Z> zvzz
@@ -289,11 +297,6 @@ nnoremap <leader>ev :tabe $MYVIMRC<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
 " Execute the line under the cursor as an Ex command
 nnoremap <silent> <leader>ex :yank<CR>:@"<CR>
-
-" Make a simple "search" text object.
-vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
-    \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
-onoremap s :normal vs<CR>
 
 command! -nargs=1 VC  call ExecuteVimCommandAndViewOutput(<q-args>)
 
