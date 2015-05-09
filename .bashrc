@@ -77,6 +77,10 @@ if [ -d ~/ghar ]; then
   . ~/ghar/ghar-bash-completion.sh
 fi
 
+if [ -f ~/bin/hub ]; then
+  eval "$(hub alias -s)"
+fi
+
 # make vi my default, friendly editor
 export EDITOR=vim
 
