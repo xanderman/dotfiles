@@ -2,6 +2,7 @@ import XMonad
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.GridSelect
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.Grid
@@ -51,8 +52,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 main = do
     xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar.hs"
-    xmonad $ defaultConfig
+    xmonad $ ewmh defaultConfig
         { manageHook = myManageHook
+        , handleEventHook = handleEventHook defaultConfig <+> fullscreenEventHook
         , layoutHook = avoidStruts  $  myLayout
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = hPutStrLn xmproc
