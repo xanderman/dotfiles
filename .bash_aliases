@@ -8,7 +8,7 @@ alias cronls='sudo ls /var/spool/cron/crontabs'
 # Set some default options for various commands
 alias diff=colordiff
 alias screen='TERM=screen screen'
-alias vi='vim -p'
+alias vi=vim
 
 # enable color support of ls
 if [ "$TERM" != "dumb" ] && [ -x /usr/bin/dircolors ]; then
