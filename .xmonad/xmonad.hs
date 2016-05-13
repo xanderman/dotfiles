@@ -1,6 +1,7 @@
 import XMonad
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.GridSelect
+import XMonad.Actions.Volume
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
@@ -26,13 +27,18 @@ myLayout = noBorders Full ||| Tall 1 0.03 0.5 ||| Mirror (Tall 1 0.03 0.5)
 
 myManageHook = composeAll
         {- Use xprop to find the WM_CLASS for 'className' matches -}
-        [ role =? "pop-up"                                    --> doCenterFloat
+        [ transience'
+        , isDialog                                            --> doCenterFloat
+        , role =? "pop-up"                                    --> doCenterFloat
+        {- Chat windows don't steal focus and show up on all workspaces -}
         , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd"   --> (doF W.focusDown <+> doCopyToAll)
         , className =? "Gnobots2"                             --> doFloat
         , className =? "Gimp"                                 --> doFloat
         , className =? "Calculator"                           --> doFloat
         , className =? "Lightsoff"                            --> doFloat
         , title =? "jDip"                                     --> doFloat
+        , title =? "Event Tester"                             --> doFloat
+        -- , stringProperty "WM_COMMAND" =? "xev"                --> doFloat
         ] <+> manageDocks <+> manageHook defaultConfig
         where
             doCopyToAll = ask >>= doF . \w -> (\ws -> foldr($) ws (map (copyWindow w) myWorkspaces))
@@ -47,8 +53,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         , ((modm .|. shiftMask, xK_0), windows copyToAll) -- mod+shit+0 to make window always visible
         , ((modm, xK_0), killAllOtherCopies) -- mod+0 to undo
         , ((modm, xK_a), goToSelected defaultGSConfig)
-        , ((modm, xK_s), spawnSelected defaultGSConfig ["xterm","google-chrome-beta","gvim"])
+        , ((modm, xK_s), spawnSelected defaultGSConfig ["google-chrome","gvim"])
         ]
+
+myChannels = ["Master", "Headphone", "PCM"]
 
 main = do
     xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar.hs"
@@ -70,7 +78,9 @@ main = do
         } `additionalKeysP` (
         [ ("C-<Print>", safeSpawn "gnome-screenshot" ["-a"])
         , ("<Print>", safeSpawn "gnome-screenshot" [])
-        {- , ("<XF86AudioMute>", safeSpawn "amixer -q 2 set Master toggle") -}
-        {- , ("<XF86AudioLowerVolume>", safeSpawn "amixer -q 2 set Master 4%-") -}
-        {- , ("<XF86AudioRaiseVolume>", safeSpawn "amixer -q 2 set Master 4%+") -}
+        , ("<XF86AudioMute>", toggleMuteChannels myChannels >> return ())
+        , ("<XF86AudioLowerVolume>", setMuteChannels myChannels False >> lowerVolumeChannels myChannels 4 >> return ())
+        , ("<XF86AudioRaiseVolume>", setMuteChannels myChannels False >> raiseVolumeChannels myChannels 4 >> return ())
+        , ("<XF86MonBrightnessUp>", safeSpawn "xbacklight" ["-inc", "20"])
+        , ("<XF86MonBrightnessDown>", safeSpawn "xbacklight" ["-dec", "20"])
         ] ++ LocalMods.additionalKeysP)
