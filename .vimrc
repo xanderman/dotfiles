@@ -40,6 +40,7 @@ Plugin 'nacitar/terminalkeys.vim'
 Plugin 'sjl/gundo.vim'
 Plugin 'sjl/splice.vim'
 Plugin 'theevocater/vim-perforce'
+Plugin 'tmux-plugins/vim-tmux'
 Plugin 'tommcdo/vim-exchange'
 Plugin 'tommcdo/vim-lion'
 Plugin 'tomtom/quickfixsigns_vim'
@@ -52,8 +53,12 @@ Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'Valloric/MatchTagAlways'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'vim-scripts/argtextobj.vim'
+Plugin 'google/vim-searchindex'
 Plugin 'google/vim-syncopate'
+Plugin 'chrisbra/vim-diff-enhanced'
 
 " Plugins with settings
 Plugin 'mhinz/vim-signify'
@@ -116,6 +121,7 @@ set history=1000        " remember ALL the commands!
 set hlsearch            " Search term highlighting
 set ignorecase          " ignore case in searches
 set incsearch           " incremental search
+set laststatus=2        " always show status line
 set magic               " extended regex
 set matchpairs+=<:>     " % jumps between <> too
 set mouse=a             " let me use the mouse!
@@ -136,6 +142,7 @@ set showmatch           " show opening bracket for just typed closing bracket
 set sidescrolloff=5     " always keep a few columns left/right of cursor visible
 set smartcase           " match case when I put a capital letter in the search
 set smarttab            " use shiftwidth for tabs at BOL
+set splitbelow          " new horizontal splits on the bottom
 set splitright          " new vsplit window on right
 set tabpagemax=100      " let me have lots of tabs
 set title               " update the window title
@@ -184,15 +191,19 @@ let g:solarized_termcolors=16
 colorscheme solarized
 highlight TabLineSel ctermfg=Green
 
-" Status line madness
-highlight StatusLine ctermfg=Cyan
-set laststatus=2
-set statusline=%F%m%r%w\ %y\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ %{CapsLockStatusline()}%=%l/%L,%v[%p%%]
+" Airline settings
+" powerline_fonts needs to come first
+let g:airline_powerline_fonts = 1
+if exists('g:local_vimrc_airline_section_y')
+  let g:airline_section_y = airline#section#create(g:local_vimrc_airline_section_y)
+endif
 
+" Show tabs, trailing whitespace, etc
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
   let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
 endif
+set list
 
 " highlight the row with the cursor only in the active window
 autocmd WinEnter * set cursorline
@@ -238,6 +249,9 @@ nnoremap <silent> <Leader>gt :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
 nnoremap <silent> <Leader>gT :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
 nnoremap ZA :qa<CR>
 
+" <leader>b to geta  quick list of buffers and a prompt to choose one
+nnoremap <leader>b :ls<CR>:b<SPACE>
+
 " Close quickfix, location, and preview windows quickly
 nnoremap <silent> <F3> :cclose<CR>:lclose<CR>:pclose<CR>
 
@@ -247,7 +261,7 @@ if s:diff_mode
   " special settings for vimdiff
   " nnoremap <Leader>m :diffget 1<CR>
   " nnoremap <Leader>y :diffget 3<CR>
-  " nnoremap <Leader>r :diffupdate<CR>
+  nnoremap <Leader>r :diffupdate<CR>
 else
   " special setup for non-diff mode
 

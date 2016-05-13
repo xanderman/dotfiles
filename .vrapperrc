@@ -1,4 +1,5 @@
 set syncmodifiable=nosync
+set ignorecase
 set smartcase
 set hlsearch
 set incsearch
@@ -8,17 +9,16 @@ set softtabstop=2
 set tabstop=2
 set shiftwidth=2
 
-set saney
+:map Y y$
 set contentassistmode
 
 nnoremap <F2> :nohlsearch<CR>
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
-nnoremap <C-n> gt
-nnoremap <C-p> gT
+nnoremap <M-h> <C-w>h
+nnoremap <M-l> <C-w>l
+nnoremap <M-n> <C-w>gt
+nnoremap <M-p> <C-w>gT
 
-vmap gw :fm<CR>
-vmap gq :fm<CR>
+vmap gw :format<CR>
+vmap gq :format<CR>
 
 eclipseaction findref org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace
-nmap gr :findref<CR>
