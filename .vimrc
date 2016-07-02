@@ -72,6 +72,7 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 let g:UltiSnipsEditSplit = "vertical"
 let g:UltiSnipsListSnippets = "<c-l>"
+let g:UltiSnipsSnippetsDir = "~/.vim/UltiSnips/"
 
 " Enable any local modifications
 if filereadable($HOME . '/.local_config/local.vim')
