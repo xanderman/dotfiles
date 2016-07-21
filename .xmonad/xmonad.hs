@@ -11,8 +11,11 @@ import XMonad.Layout.IM
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
+import XMonad.Util.Dzen
 import XMonad.Util.Run (safeSpawn, spawnPipe)
 import XMonad.Util.EZConfig (additionalKeysP)
+import Data.Map (fromList)
+import Data.Monoid (mappend)
 import Data.Ratio ((%))
 import System.IO
 
@@ -48,15 +51,21 @@ myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         [ ((m .|. modm, k), windows $ f i)
             | (i, k) <- zip (workspaces conf) [xK_1 .. xK_9]
-            , (f, m) <- [(W.view, 0), (W.shift, shiftMask), (copy, shiftMask .|. controlMask)]] ++
+            , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask), (copy, shiftMask .|. controlMask)]] ++
         [ ((modm .|. shiftMask, xK_c), kill1)
         , ((modm .|. shiftMask, xK_0), windows copyToAll) -- mod+shit+0 to make window always visible
         , ((modm, xK_0), killAllOtherCopies) -- mod+0 to undo
         , ((modm, xK_a), goToSelected defaultGSConfig)
-        , ((modm, xK_s), spawnSelected defaultGSConfig ["google-chrome","gvim"])
+        , ((modm, xK_s), spawnSelected defaultGSConfig ["eclipse46_testing","google-chrome-beta","gvim","xterm"])
         ]
 
-myChannels = ["Master", "Headphone", "PCM"]
+centered = onCurr (center 150 66)
+    >=> font "-*-helvetica-*-r-*-*-64-*-*-*-*-*-*-*"
+    >=> addArgs ["-fg", "#80c0ff"]
+    >=> addArgs ["-bg", "#000040"]
+myAlert = dzenConfig centered . show . round
+
+myChannels = ["Master", "Headphone", "Speaker", "PCM"]
 
 main = do
     xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar.hs"
@@ -66,7 +75,7 @@ main = do
         , layoutHook = avoidStruts  $  myLayout
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = hPutStrLn xmproc
-                        , ppTitle = xmobarColor "green" "" . shorten 50
+                        , ppTitle = xmobarColor "green" ""
                         }
         , modMask = mod4Mask    -- Rebind Mod to the Windows key
         , terminal = "urxvt"    -- Use urxvt terminal
@@ -79,8 +88,8 @@ main = do
         [ ("C-<Print>", safeSpawn "gnome-screenshot" ["-a"])
         , ("<Print>", safeSpawn "gnome-screenshot" [])
         , ("<XF86AudioMute>", toggleMuteChannels myChannels >> return ())
-        , ("<XF86AudioLowerVolume>", setMuteChannels myChannels False >> lowerVolumeChannels myChannels 4 >> return ())
-        , ("<XF86AudioRaiseVolume>", setMuteChannels myChannels False >> raiseVolumeChannels myChannels 4 >> return ())
+        , ("<XF86AudioLowerVolume>", setMuteChannels myChannels False >> lowerVolumeChannels myChannels 4 >>= myAlert)
+        , ("<XF86AudioRaiseVolume>", setMuteChannels myChannels False >> raiseVolumeChannels myChannels 4 >>= myAlert)
         , ("<XF86MonBrightnessUp>", safeSpawn "xbacklight" ["-inc", "20"])
         , ("<XF86MonBrightnessDown>", safeSpawn "xbacklight" ["-dec", "20"])
         ] ++ LocalMods.additionalKeysP)
