@@ -31,7 +31,8 @@ alias ff='env MOZ_NO_REMOTE=1 firefox -ProfileManager &'
 
 # Decimal/Hex converter functions
 function h2d {
-  echo "obase=10; $@" | bc
+  local x=${@#0x}
+  echo "ibase=16; ${x^^}" | bc
 }
 
 function d2h {

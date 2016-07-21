@@ -12,8 +12,12 @@ fi
 
 # History controls
 shopt -s histappend  # append to histfile instead of overwriting
-export HISTSIZE=100000
-export HISTFILESIZE=10000000
+# Undocumented feature to set history size to unlimited
+export HISTSIZE=
+export HISTFILESIZE=
+export HISTTIMEFORMAT="[%F %T] "
+export HISTFILE=~/.bash_eternal_history
+# PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 # Don't put duplicate commands or commands staring with a space in the history
 export HISTCONTROL=ignoreboth:erasedups
 
@@ -103,17 +107,18 @@ function __enable_global_tmux_session {
 # Function to update a shell inside tmux with new environment variables
 # (really useful for switching between ssh and local)
 function update-environment {
-  local v
-  while read v; do
-    if [[ $v == -* ]]; then
-      unset ${v/#-/}
-    else
-      # Surround value with quotes
-      v=${v/=/=\"}
-      v=${v/%/\"}
-      eval export $v
-    fi
-  done < <(tmux show-environment)
+  eval $(tmux show-environment -s)
+  # local v
+  # while read v; do
+  #   if [[ $v == -* ]]; then
+  #     unset ${v/#-/}
+  #   else
+  #     # Surround value with quotes
+  #     v=${v/=/=\"}
+  #     v=${v/%/\"}
+  #     eval export $v
+  #   fi
+  # done < <(tmux show-environment)
 }
 
 # Local bashrc customization
