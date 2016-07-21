@@ -1,3 +1,11 @@
 URxvt.scrollBar:        false
 URxvt.print-pipe:       cat > $(TMPDIR=$HOME mktemp urxvt.XXXXXX)
 URxvt*visualBell:       false
+URxvt.urgentOnBell:     true
+URxvt.iso14755:         false
+URxvt.font:             xft:SourceCodePro-Bold:size=9,xft:Code2000:antialias=false
+URxvt.letterSpace:      -2
+URxvt.lineSpace:        0
+
+URxvt.perl-ext-common: default,clipboard
+URxvt.keysym.Shift-Control-V: perl:clipboard:paste
