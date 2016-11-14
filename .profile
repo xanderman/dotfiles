@@ -7,6 +7,8 @@ fi
 
 # export all system-wide variables I want inherited by applications
 
+export XDG_RUNTIME_DIR=/run/user/$UID
+
 # set PATH so it includes my private bin
 export PATH="$HOME/bin:${PATH}"
 

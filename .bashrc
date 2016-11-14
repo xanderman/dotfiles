@@ -107,7 +107,7 @@ function __enable_global_tmux_session {
 # Function to update a shell inside tmux with new environment variables
 # (really useful for switching between ssh and local)
 function update-environment {
-  eval $(tmux show-environment -s)
+  eval $(tmux show-environment ${1:+-t $1} -s)
   # local v
   # while read v; do
   #   if [[ $v == -* ]]; then
