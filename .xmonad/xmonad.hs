@@ -48,6 +48,8 @@ myManageHook = composeAll
 
 myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
+myProgs = LocalMods.myProgs
+
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         [ ((m .|. modm, k), windows $ f i)
             | (i, k) <- zip (workspaces conf) [xK_1 .. xK_9]
@@ -56,7 +58,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         , ((modm .|. shiftMask, xK_0), windows copyToAll) -- mod+shit+0 to make window always visible
         , ((modm, xK_0), killAllOtherCopies) -- mod+0 to undo
         , ((modm, xK_a), goToSelected defaultGSConfig)
-        , ((modm, xK_s), spawnSelected defaultGSConfig ["eclipse46_testing","google-chrome-beta","gvim","xterm"])
+        , ((modm, xK_s), spawnSelected defaultGSConfig myProgs)
         ]
 
 centered = onCurr (center 150 66)
@@ -65,7 +67,7 @@ centered = onCurr (center 150 66)
     >=> addArgs ["-bg", "#000040"]
 myAlert = dzenConfig centered . show . round
 
-myChannels = ["Master", "Headphone", "Speaker", "PCM"]
+myChannels = LocalMods.myChannels
 
 main = do
     xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar.hs"
