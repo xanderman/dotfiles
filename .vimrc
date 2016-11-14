@@ -28,7 +28,6 @@ Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ciaranm/securemodelines'
 " Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'ConradIrwin/vim-comment-object'
-Plugin 'drmikehenry/vim-fixkey'
 Plugin 'Julian/vim-textobj-variable-segment'
 Plugin 'kana/vim-textobj-function'
 Plugin 'kana/vim-textobj-indent'
@@ -61,6 +60,11 @@ Plugin 'google/vim-searchindex'
 Plugin 'google/vim-syncopate'
 Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'Raimondi/delimitMate'
+
+if !has('nvim')
+  " Plugins incompatible with nvim
+  Plugin 'drmikehenry/vim-fixkey'
+endif
 
 " Plugins with settings
 Plugin 'mhinz/vim-signify'
@@ -105,10 +109,16 @@ set runtimepath+=~/.vim/after
 augroup myvimrc
 autocmd!
 
+if has('nvim')
+  " clipboard doesn't connect to X, leave it as default
+else
+  " never connect to the X server
+  set clipboard=exclude:.*
+endif
+
 set autoindent          " copy previous indent on new lines
 set background=dark     " Use brighter text color
 set backspace=indent,eol,start  " more powerful backspacing
-set clipboard=exclude:.*      " never connect to the X server
 set colorcolumn+=+1,+2  " poor man's print margin
 set cursorline          " highlight the row with the cursor
 set diffopt+=iwhite     " ignore trailing whitespace in diffs
@@ -148,7 +158,6 @@ set splitbelow          " new horizontal splits on the bottom
 set splitright          " new vsplit window on right
 set tabpagemax=100      " let me have lots of tabs
 set title               " update the window title
-set tpm=100             " open as many tabs as I want
 set ttimeout            " short timeout for terminal characters
 set ttimeoutlen=50
 set undofile            " save undo across sessions
@@ -191,7 +200,6 @@ endif
 " Set my preferred colors
 let g:solarized_termcolors=16
 colorscheme solarized
-highlight TabLineSel ctermfg=Green
 
 " Airline settings
 " powerline_fonts needs to come first
@@ -212,7 +220,12 @@ autocmd WinEnter * set cursorline
 autocmd WinLeave * set nocursorline
 
 " Restore cursor across sessions
-set viminfo='50,<1000,s100,/50,:50,h,n~/.vim/viminfo
+set viminfo='50,<1000,s100,/50,:50,h
+if has('nvim')
+  set viminfo+=n~/.config/nvim/nviminfo
+else
+  set viminfo+=n~/.vim/viminfo
+endif
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
         \|   exe("norm `\"")
         \| endif
@@ -245,10 +258,10 @@ nnoremap <silent> <M-k> <C-w>k
 nnoremap <silent> <M-l> <C-w>l
 nnoremap <silent> <M-n> gt
 nnoremap <silent> <M-p> gT
-nnoremap <silent> <Leader><M-n> :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
-nnoremap <silent> <Leader><M-p> :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
-nnoremap <silent> <Leader>gt :exec tabpagenr() % tabpagenr('$') . "tabm"<CR>
-nnoremap <silent> <Leader>gT :exec (tabpagenr() == 1 ? "" : tabpagenr() - 2) . "tabm"<CR>
+nnoremap <silent> <Leader><M-n> :+tabmove<CR>
+nnoremap <silent> <Leader><M-p> :-tabmove<CR>
+nnoremap <silent> <Leader>gt :+tabmove<CR>
+nnoremap <silent> <Leader>gT :-tabmove<CR>
 nnoremap ZA :qa<CR>
 
 " <leader>b to geta  quick list of buffers and a prompt to choose one
@@ -317,14 +330,13 @@ nnoremap <leader>sv :source $MYVIMRC<CR>
 " Execute the line under the cursor as an Ex command
 nnoremap <silent> <leader>ex :yank<CR>:@"<CR>
 
-command! -nargs=1 VC  call ExecuteVimCommandAndViewOutput(<q-args>)
-
 function! ExecuteVimCommandAndViewOutput(cmd)
   let @v = maktaba#command#GetOutput(a:cmd)
   new
   set buftype=nofile
   put v
 endfunction
+command! -nargs=1 VC  call ExecuteVimCommandAndViewOutput(<q-args>)
 
 nnoremap U <C-r>
 nnoremap <F6> :GundoToggle<CR>
