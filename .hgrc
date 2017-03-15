@@ -20,6 +20,11 @@ splice.args = -f $base $local $other $output -c 'SpliceInit'
 splice.premerge = keep
 splice.priority = 1
 
+vimdiff.executable = vimdiff
+vimdiff.args = -f -d $output -M $local $base $other -c "wincmd J" -c "set modifiable" -c "set write"
+vimdiff.premerge = keep
+vimdiff.priority = 2
+
 [trainingwheels]
 revert--all = false
 

@@ -11,8 +11,6 @@ URxvt.externalBorder:   0
 ! Ideally this would change with the chosen base16 theme, but meh
 URxvt.borderColor:      #002b36
 
-URxvt.matcher.launcher: google-chrome-beta
-URxvt.matcher.button: 1
 URxvt.matcher.pattern.1: \\bgo/[A-z0-9-_/]+
 URxvt.matcher.pattern.2: \\bb/[0-9]+
 URxvt.matcher.pattern.3: \\bcl/[0-9]+

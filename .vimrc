@@ -117,6 +117,11 @@ else
   set clipboard=exclude:.*
 endif
 
+if exists("+inccommand")
+  " Nifty new nvim feature
+  set inccommand
+endif
+
 set autoindent          " copy previous indent on new lines
 set background=dark     " Use brighter text color
 set backspace=indent,eol,start  " more powerful backspacing
