@@ -7,10 +7,12 @@ desc.here = bold
 
 [extensions]
 prompt = ~/src/hg-prompt/prompt.py
-pager =
+
+[alias]
+/* xl = ll -r smart --pager=no */
 
 [pager]
-pager = LESS='FXRSMqi' less
+pager = LESS='RSMqi' smartpager
 
 [merge-tools]
 splice.executable = vim

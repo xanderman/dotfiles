@@ -1,0 +1,28 @@
+#!/bin/bash
+# This is a warpper around less to get the behavior I want in a hg/git pager.
+# Basically, it will print output up to MAX_LINES, and invoke less for anything
+# longer. This is *NOT* a drop-in replacement for less. It will not forward
+# arguments, and only works for stdin.
+#
+# To use in hg, set pager.pager = LESS='RSMqi' smartpager
+
+readonly MAX_LINES=25
+
+# Read one line, exit immediately if EOF
+IFS= read -r lines
+(( $? )) && exit 0
+
+# Read up to MAX_LINES
+n=1
+while [ $n -lt $MAX_LINES ] && IFS= read -r line; do
+  lines+=$(printf '\n%s' "$line")
+  n=$((n + 1))
+done
+
+# If there are more lines, call less. If not, print what we've read.
+if IFS= read -r line; then
+  # The subshell prints everything read so far, then consumes the rest of stdin.
+  { printf '%s\n%s\n' "$lines" "$line"; exec cat; } | exec less
+else
+  echo "$lines"
+fi
