@@ -85,6 +85,10 @@ if [ -f ~/bin/hub ]; then
   eval "$(hub alias -s)"
 fi
 
+# Shell colors
+BASE16_SHELL=$HOME/src/base16-shell
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
 # make vi my default, friendly editor
 export EDITOR=vim
 

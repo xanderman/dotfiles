@@ -6,6 +6,10 @@ URxvt.iso14755:         false
 URxvt.font:             xft:Noto Mono for Powerline:size=9,xft:Code2000:antialias=false
 URxvt.letterSpace:      -2
 URxvt.lineSpace:        0
+URxvt.internalBorder:   0
+URxvt.externalBorder:   0
+! Ideally this would change with the chosen base16 theme, but meh
+URxvt.borderColor:      #002b36
 
 URxvt.matcher.launcher: google-chrome-beta
 URxvt.matcher.button: 1

@@ -24,6 +24,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'chriskempson/base16-vim'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ciaranm/securemodelines'
 " Plugin 'ConradIrwin/vim-bracketed-paste'
@@ -198,8 +199,10 @@ if exists("&regexpengine")
 endif
 
 " Set my preferred colors
-let g:solarized_termcolors=16
-colorscheme solarized
+" let g:solarized_termcolors=16
+" colorscheme solarized
+let g:base16colorspace=256
+source ~/.vimrc_background
 
 " Airline settings
 " powerline_fonts needs to come first
