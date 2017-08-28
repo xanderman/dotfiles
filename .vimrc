@@ -256,8 +256,8 @@ autocmd FileType p4-spec set filetype=p4client
 cmap w!! w !sudo tee > /dev/null %
 
 " Quickly remove search highlight without turning off the option permanently
-nnoremap <silent> <F2> :nohlsearch<CR>
-nnoremap <silent> <CR> :nohlsearch<CR>
+nnoremap <silent> <F2> :nohlsearch<CR>:syntax sync fromstart<CR>
+nnoremap <silent> <CR> :nohlsearch<CR>:syntax sync fromstart<CR>
 
 " Make for nicer window/tab management
 nnoremap <silent> <M-h> <C-w>h

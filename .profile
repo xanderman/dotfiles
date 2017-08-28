@@ -10,7 +10,7 @@ fi
 export XDG_RUNTIME_DIR=/run/user/$UID
 
 # set PATH so it includes my private bin
-export PATH="$HOME/bin:${PATH}"
+export PATH="$HOME/bin:$HOME/.cabal/bin:${PATH}"
 
 # Tell Chrome to use the proxy (system settings don't work in xmonad)
 # export auto_proxy="https://proxyconfig.corp.google.com/wpad.dat"

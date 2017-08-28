@@ -26,8 +26,8 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
-# Open a new firefox process
-alias ff='env MOZ_NO_REMOTE=1 firefox -ProfileManager &'
+# IntelliJ occasionally locks out the keyboard, restarting IBus fixes it
+alias fix_intellij='ibus-daemon -rd'
 
 # Decimal/Hex converter functions
 function h2d {
