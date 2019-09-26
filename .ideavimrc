@@ -1,0 +1,26 @@
+set surround
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
+set scrolloff=5
+set sidescrolloff=5
+set showmode
+
+:map Y y$
+
+nnoremap <CR> :nohlsearch<CR>
+nnoremap <M-h> <C-w>h
+nnoremap <M-l> <C-w>l
+nnoremap <M-n> <C-w>gt
+nnoremap <M-p> <C-w>gT
+
+map gw :action ReformatCode<CR>
+map gq :action ReformatCode<CR>
+vmap gw :action ReformatCode<CR>
+vmap gq :action ReformatCode<CR>
+
+nnoremap gi :action GotoImplementation<CR>
+nnoremap gr :action Refactorings.QuickListPopupAction<CR>
+
+source ~/.local_config/ideavimrc

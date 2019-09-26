@@ -29,6 +29,9 @@ alias ....='cd ../../..'
 # IntelliJ occasionally locks out the keyboard, restarting IBus fixes it
 alias fix_intellij='ibus-daemon -rd'
 
+# Print a 'ruler' to help count characters
+alias ruler='seq -s "" -f "%4.0f|" 5 5'
+
 # Decimal/Hex converter functions
 function h2d {
   local x=${@#0x}

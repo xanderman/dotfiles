@@ -7,26 +7,34 @@ desc.here = bold
 
 [extensions]
 prompt = ~/src/hg-prompt/prompt.py
+# hgext.beautifygraph=
 
 [alias]
+shelf = shelve -l
 /* xl = ll -r smart --pager=no */
 
 [pager]
 pager = LESS='RSMqi' smartpager
 
 [merge-tools]
-;splice.executable = vim
-;splice.args = -f $base $local $other $output -c 'SpliceInit'
-;splice.premerge = keep
-;splice.priority = 1
-
+splice.executable = vim
+splice.args = -f $base $local $other $output -c 'SpliceInit'
+splice.premerge = keep
+splice.priority = 1
+splice.disabled = true
 vimdiff.executable = vimdiff
 vimdiff.args = -f -d $output -M $local $base $other -c "wincmd J" -c "set modifiable" -c "set write"
 vimdiff.premerge = keep
+vimdiff.check = conflicts
+vimdiff.disabled = false
 vimdiff.priority = 1
+
+[phases]
+new-commit = secret
 
 [trainingwheels]
 revert--all = false
+pushdirty = false
 
 # Comes last so local config overrides global config
 %include .local_config/hgrc

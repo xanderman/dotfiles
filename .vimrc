@@ -30,11 +30,11 @@ Plugin 'ciaranm/securemodelines'
 " Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'ConradIrwin/vim-comment-object'
 Plugin 'Julian/vim-textobj-variable-segment'
+Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-function'
 Plugin 'kana/vim-textobj-indent'
 Plugin 'kana/vim-textobj-lastpat'
 Plugin 'kana/vim-textobj-line'
-Plugin 'kana/vim-textobj-user'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'nacitar/terminalkeys.vim'
@@ -56,11 +56,13 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'vim-scripts/argtextobj.vim'
 Plugin 'google/vim-searchindex'
 Plugin 'google/vim-syncopate'
 Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'Raimondi/delimitMate'
+Plugin 'prabirshrestha/async.vim'
+" Plugin 'prabirshrestha/vim-lsp'
+Plugin 'natebosch/vim-lsc'
 
 if !has('nvim')
   " Plugins incompatible with nvim
@@ -70,6 +72,9 @@ endif
 " Plugins with settings
 Plugin 'mhinz/vim-signify'
 let g:signify_vcs_list = ['perforce', 'git', 'hg', 'svn']
+
+Plugin 'sgur/vim-textobj-parameter'
+let g:vim_textobj_parameter_mapping = 'a'
 
 Plugin 'scrooloose/syntastic'
 let g:syntastic_mode_map = {
@@ -142,7 +147,7 @@ set incsearch           " incremental search
 set laststatus=2        " always show status line
 set magic               " extended regex
 set matchpairs+=<:>     " % jumps between <> too
-set mouse=a             " let me use the mouse!
+set mouse=""            " serisouly, who uses a mouse?
 set nodigraph           " don't bother me with two-byte chars
 set noerrorbells        " I hate the bell!
 set noicon              " this is a terminal, who needs icons?
