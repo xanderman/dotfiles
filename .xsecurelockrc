@@ -1,0 +1,2 @@
+# options are asterisks, cursor, disco, emoji, emoticon, hidden, kaomoji, time, time_hex
+export XSECURELOCK_PASSWORD_PROMPT="${XSECURELOCK_PASSWORD_PROMPT:-asterisks}"
