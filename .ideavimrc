@@ -6,6 +6,7 @@ set incsearch
 set scrolloff=5
 set sidescrolloff=5
 set showmode
+set ideajoin
 
 :map Y y$
 
