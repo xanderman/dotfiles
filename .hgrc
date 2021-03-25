@@ -6,12 +6,15 @@ username = "Bob Gardner <wrg007@gmail.com>"
 desc.here = bold
 
 [extensions]
-prompt = ~/src/hg-prompt/prompt.py
+# prompt = ~/src/hg-prompt/prompt.py
 # hgext.beautifygraph=
 
 [alias]
 shelf = shelve -l
-/* xl = ll -r smart --pager=no */
+xl = ll -r smart --pager=no
+
+[revsetalias]
+next = successors(.)
 
 [pager]
 pager = LESS='RSMqi' smartpager
@@ -31,6 +34,10 @@ vimdiff.priority = 1
 
 [phases]
 new-commit = secret
+
+[experimental]
+revisions.disambiguatewithin = smart
+revisions.prefixhexnode = yes
 
 [trainingwheels]
 revert--all = false

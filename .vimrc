@@ -62,7 +62,7 @@ Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'Raimondi/delimitMate'
 Plugin 'prabirshrestha/async.vim'
 " Plugin 'prabirshrestha/vim-lsp'
-Plugin 'natebosch/vim-lsc'
+" Plugin 'natebosch/vim-lsc'
 
 if !has('nvim')
   " Plugins incompatible with nvim

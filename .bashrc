@@ -101,8 +101,10 @@ function __enable_global_tmux_session {
     session_id=`date +%Y%m%d%H%M%S`
     # Try to start a new session grouped with the global one, which will be
     # destroyed on detach. Otherwise, start the global session.
+    # removed destroy-unattached because it doesn't work as will with full-time
+    # WFH
+      # set-option destroy-unattached \; \
     tmux -2 new-session -d -s $session_id -t "$USER" \; \
-      set-option destroy-unattached \; \
       attach-session -t $session_id ||
       tmux -2 new-session -s "$USER"
   fi
