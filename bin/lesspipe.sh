@@ -43,11 +43,11 @@ if [[ -f "$1" && "$1" = *$sep* || "$1" = *$altsep ]]; then
   xxx="${1%=}"
   set "$xxx"
 fi
-tmpdir=$(mktemp -d -p "${TMPDIR:-/tmp}" lesspipe.XXXXXXXXXX)
+tmpdir=$(mktemp -d -t lesspipe)
 
 nexttmp () {
   # nexttmp -d returns a directory
-  mktemp -p "$tmpdir" $1
+  mktemp $1 "$tmpdir/XXXXXXXXXX"
 }
 [[ -d "$tmpdir" ]] || exit 1
 trap "rm -rf '$tmpdir'" 0

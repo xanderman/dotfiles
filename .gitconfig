@@ -39,7 +39,9 @@
 [branch]
   autosetupmerge = always
   autosetuprebase = always
+
 [push]
-	default = simple
+  default = simple
+
 [credential]
-	helper = store
+  helper = store

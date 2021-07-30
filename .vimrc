@@ -24,7 +24,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'chriskempson/base16-vim'
+" Plugin 'chriskempson/base16-vim'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ciaranm/securemodelines'
 " Plugin 'ConradIrwin/vim-bracketed-paste'
@@ -61,6 +61,7 @@ Plugin 'google/vim-syncopate'
 Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'Raimondi/delimitMate'
 Plugin 'prabirshrestha/async.vim'
+Plugin 'ycm-core/YouCompleteMe'
 " Plugin 'prabirshrestha/vim-lsp'
 " Plugin 'natebosch/vim-lsc'
 
@@ -76,16 +77,16 @@ let g:signify_vcs_list = ['perforce', 'git', 'hg', 'svn']
 Plugin 'sgur/vim-textobj-parameter'
 let g:vim_textobj_parameter_mapping = 'a'
 
-Plugin 'scrooloose/syntastic'
-let g:syntastic_mode_map = {
-  \ 'mode': 'passive',
-  \ 'active_filetypes': ['java', 'python'],
-  \ 'passive_filetypes': [],
-  \ }
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_wq = 0
+" Plugin 'scrooloose/syntastic'
+" let g:syntastic_mode_map = {
+"   \ 'mode': 'passive',
+"   \ 'active_filetypes': ['java', 'python'],
+"   \ 'passive_filetypes': [],
+"   \ }
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_wq = 0
 
-Plugin 'SirVer/ultisnips'
+" Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 let g:UltiSnipsEditSplit = "vertical"
 let g:UltiSnipsListSnippets = "<c-l>"
@@ -102,6 +103,9 @@ source $VIMRUNTIME/macros/matchit.vim
 call vundle#end()
 filetype plugin indent on
 syntax on
+
+call glaive#Install()
+Glaive codefmt google_java_executable='/usr/local/bin/google-java-format' prettier_executable='/usr/local/bin/prettier'
 
 " Make sure my configs have precedence over any plugins
 " This really shouldn't be necessary, but sometimes plugin managers get it wrong
@@ -132,8 +136,8 @@ set background=dark     " Use brighter text color
 set backspace=indent,eol,start  " more powerful backspacing
 set colorcolumn+=+1,+2  " poor man's print margin
 set cursorline          " highlight the row with the cursor
-set diffopt+=iwhite     " ignore trailing whitespace in diffs
-set diffopt+=vertical   " always split diff windows vertically
+" set diffopt+=iwhite     " ignore trailing whitespace in diffs
+" set diffopt+=vertical   " always split diff windows vertically
 set display+=lastline   " show full last line when it's long
 set esckeys             " use arrow keys in insert mode
 set expandtab           " don't replace my spaces with tab characters
@@ -209,10 +213,10 @@ if exists("&regexpengine")
 endif
 
 " Set my preferred colors
-" let g:solarized_termcolors=16
-" colorscheme solarized
-let g:base16colorspace=256
-source ~/.vimrc_background
+let g:solarized_termcolors=256
+colorscheme solarized
+" let g:base16colorspace=256
+" source ~/.vimrc_background
 
 " Airline settings
 " powerline_fonts needs to come first
