@@ -5,8 +5,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# My bin should be first, rvm should be last
+export PATH="$HOME/bin:/usr/local/opt/node@10/bin:$PATH:$HOME/.rvm/bin"
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/bobgardner/.oh-my-zsh"
@@ -79,8 +79,9 @@ POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(brew command-not-found encode64 git git-hubflow golang mercurial mvn rand-quote tmux vi-mode vundle)
+plugins=(brew bundler command-not-found docker encode64 gem git git-hubflow golang mercurial mvn nvm rails rake rand-quote tldr tmux vi-mode vundle)
 
+NVM_AUTOLOAD=1
 ZSH_TMUX_AUTOSTART=true
 ZSH_TMUX_AUTOCONNECT=true
 ZSH_TMUX_UNICODE=true
@@ -93,12 +94,19 @@ unsetopt EXTENDED_GLOB
 unsetopt SHARE_HISTORY
 setopt INC_APPEND_HISTORY
 
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
 export EDITOR='vim'
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 # Make less more friendly for non-text input files, see lesspipe(1)
 [ -x $HOME/bin/lesspipe.sh ] && eval "$($HOME/bin/lesspipe.sh)"
 export LESS="-RSMqi"
 
+alias glog='git log --pretty=format:"%C(auto)%h%d (%ar) %s" --graph'
+alias gloga='glog --all'
 alias ptree='ps -aef --forest'
 alias vi=vim
 alias la='ls -A'
@@ -114,5 +122,15 @@ function d2h {
   echo "obase=16; $@" | bc
 }
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh
+# Completions belong in $ZSH/completions, make sure it exists
+if [[ ! -d "$ZSH/completions" ]]; then
+  mkdir -pv $ZSH/completions
+fi
+# Make sure gh completions are available
+if [[ ! -z $commands[gh] && ! -f "$ZSH/completions/_gh" ]]; then
+  gh completion --shell zsh > $ZSH/completions/_gh
+  echo "add gh completions"
+fi
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

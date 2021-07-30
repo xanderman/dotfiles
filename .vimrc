@@ -53,6 +53,8 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-bundler'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -64,6 +66,8 @@ Plugin 'prabirshrestha/async.vim'
 Plugin 'ycm-core/YouCompleteMe'
 " Plugin 'prabirshrestha/vim-lsp'
 " Plugin 'natebosch/vim-lsc'
+Plugin 'rlue/vim-fold-rspec'
+Plugin 'fatih/vim-go'
 
 if !has('nvim')
   " Plugins incompatible with nvim
@@ -87,10 +91,10 @@ let g:vim_textobj_parameter_mapping = 'a'
 " let g:syntastic_check_on_wq = 0
 
 " Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-let g:UltiSnipsEditSplit = "vertical"
-let g:UltiSnipsListSnippets = "<c-l>"
-let g:UltiSnipsSnippetsDir = "~/.vim/UltiSnips/"
+" Plugin 'honza/vim-snippets'
+" let g:UltiSnipsEditSplit = "vertical"
+" let g:UltiSnipsListSnippets = "<c-l>"
+" let g:UltiSnipsSnippetsDir = "~/.vim/UltiSnips/"
 
 " Enable any local modifications
 if filereadable($HOME . '/.local_config/local.vim')
@@ -144,6 +148,7 @@ set expandtab           " don't replace my spaces with tab characters
 set foldcolumn=2        " show me where the folds are in the gutter
 set foldlevelstart=1    " start with most folds closed
 set gdefault            " always do global search/replace
+set hidden
 set history=1000        " remember ALL the commands!
 set hlsearch            " Search term highlighting
 set ignorecase          " ignore case in searches
@@ -243,7 +248,7 @@ if has('nvim')
 else
   set viminfo+=n~/.vim/viminfo
 endif
-autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+autocmd BufReadPost * if &filetype != "gitcommit" && line("'\"") > 0 && line("'\"") <= line("$")
         \|   exe("norm `\"")
         \| endif
 

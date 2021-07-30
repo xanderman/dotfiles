@@ -1,3 +1,11 @@
 LICENSE
 README.*
 .*~
+.gharignore
+.X*
+.bash*
+.dircolors
+.fonts
+.profile
+.xmonad
+.xsecurelockrc

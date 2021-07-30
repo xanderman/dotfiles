@@ -7,3 +7,4 @@
 *.pyc-2.4
 .dotest
 workspace
+.DS_Store

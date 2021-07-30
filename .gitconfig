@@ -17,9 +17,10 @@
 
 [mergetool]
   prompt = false
+  keepBackup = false
 
-[mergetool "vimdiff"]
-  cmd = vimdiff -X
+; [mergetool "vimdiff"]
+;   cmd = vimdiff -X
 
 [diff]
   tool = vimdiff
@@ -29,6 +30,7 @@
 
 [core]
   excludesfile = ~/.gitexclude
+  pager = LESS='RSMqi' smartpager
 
 [color]
   ui = true
@@ -45,3 +47,18 @@
 
 [credential]
   helper = store
+
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
+[diff "sopsdiffer"]
+  textconv = sops -d
+
+[pull]
+  ff = only
+
+[url "ssh://git@github.com/"]
+  insteadOf = https://github.com/

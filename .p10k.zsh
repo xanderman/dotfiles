@@ -1208,7 +1208,7 @@
   #############[ kubecontext: current kubernetes context (https://kubernetes.io/) ]#############
   # Show kubecontext only when the the command you are typing invokes one of these tools.
   # Tip: Remove the next line to always show kubecontext.
-  typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|helm|kubens|kubectx|oc|istioctl|kogito|k9s|helmfile|fluxctl|stern'
+  typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kube|kubectl|helm|kubens|kubectx|oc|istioctl|kogito|k9s|helmfile|fluxctl|stern'
 
   # Kubernetes context classes for the purpose of using different colors, icons and expansions with
   # different contexts.
@@ -1237,11 +1237,17 @@
   #   typeset -g POWERLEVEL9K_KUBECONTEXT_TEST_VISUAL_IDENTIFIER_EXPANSION='⭐'
   #   typeset -g POWERLEVEL9K_KUBECONTEXT_TEST_CONTENT_EXPANSION='> ${P9K_CONTENT} <'
   typeset -g POWERLEVEL9K_KUBECONTEXT_CLASSES=(
-      # '*prod*'  PROD    # These values are examples that are unlikely
-      # '*test*'  TEST    # to match your needs. Customize them as needed.
+      '*stag*'  STAGE
+      '*uat*'   UAT
+      '*prod*'  PROD
       '*'       DEFAULT)
   typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_FOREGROUND=134
-  # typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_VISUAL_IDENTIFIER_EXPANSION='⭐'
+  typeset -g POWERLEVEL9K_KUBECONTEXT_STAGE_FOREGROUND=82
+  typeset -g POWERLEVEL9K_KUBECONTEXT_STAGE_CONTENT_EXPANSION='staging'
+  typeset -g POWERLEVEL9K_KUBECONTEXT_UAT_FOREGROUND=26
+  typeset -g POWERLEVEL9K_KUBECONTEXT_UAT_CONTENT_EXPANSION='uat'
+  typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_FOREGROUND=9
+  typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_CONTENT_EXPANSION='prod'
 
   # Use POWERLEVEL9K_KUBECONTEXT_CONTENT_EXPANSION to specify the content displayed by kubecontext
   # segment. Parameter expansions are very flexible and fast, too. See reference:
@@ -1295,7 +1301,7 @@
   #[ aws: aws profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) ]#
   # Show aws only when the the command you are typing invokes one of these tools.
   # Tip: Remove the next line to always show aws.
-  typeset -g POWERLEVEL9K_AWS_SHOW_ON_COMMAND='aws|awless|terraform|pulumi|terragrunt'
+  # typeset -g POWERLEVEL9K_AWS_SHOW_ON_COMMAND='aws|awless|terraform|pulumi|terragrunt'
 
   # POWERLEVEL9K_AWS_CLASSES is an array with even number of elements. The first element
   # in each pair defines a pattern against which the current AWS profile gets matched.
@@ -1321,17 +1327,28 @@
   #   typeset -g POWERLEVEL9K_AWS_TEST_VISUAL_IDENTIFIER_EXPANSION='⭐'
   #   typeset -g POWERLEVEL9K_AWS_TEST_CONTENT_EXPANSION='> ${P9K_CONTENT} <'
   typeset -g POWERLEVEL9K_AWS_CLASSES=(
-      # '*prod*'  PROD    # These values are examples that are unlikely
-      # '*test*'  TEST    # to match your needs. Customize them as needed.
-      '*'       DEFAULT)
+      'staging'                  STAGING_DEV
+      '*staging-developer*'      STAGING_DEV
+      '*staging-staging*master*' STAGING_MASTER
+      '*uat*cockpit*'            UAT_COCKPIT
+      '*prod*cockpit*'           PROD_COCKPIT
+      '*'                        DEFAULT)
   typeset -g POWERLEVEL9K_AWS_DEFAULT_FOREGROUND=208
-  # typeset -g POWERLEVEL9K_AWS_DEFAULT_VISUAL_IDENTIFIER_EXPANSION='⭐'
+  typeset -g POWERLEVEL9K_AWS_STAGING_DEV_CONTENT_EXPANSION='staging-dev'
+  typeset -g POWERLEVEL9K_AWS_STAGING_DEV_FOREGROUND=208
+  typeset -g POWERLEVEL9K_AWS_STAGING_MASTER_CONTENT_EXPANSION='staging-master'
+  typeset -g POWERLEVEL9K_AWS_STAGING_MASTER_FOREGROUND=208
+  typeset -g POWERLEVEL9K_AWS_UAT_COCKPIT_CONTENT_EXPANSION='uat-cockpit'
+  typeset -g POWERLEVEL9K_AWS_UAT_COCKPIT_FOREGROUND=208
+  typeset -g POWERLEVEL9K_AWS_PROD_COCKPIT_CONTENT_EXPANSION='${${AWS_PROFILE#production-prod-west-20210810-}%-0}'
+  typeset -g POWERLEVEL9K_AWS_PROD_COCKPIT_FOREGROUND=208
 
   # AWS segment format. The following parameters are available within the expansion.
   #
   # - P9K_AWS_PROFILE  The name of the current AWS profile.
   # - P9K_AWS_REGION   The region associated with the current AWS profile.
-  typeset -g POWERLEVEL9K_AWS_CONTENT_EXPANSION='${P9K_AWS_PROFILE//\%/%%}${P9K_AWS_REGION:+ ${P9K_AWS_REGION//\%/%%}}'
+  # typeset -g POWERLEVEL9K_AWS_CONTENT_EXPANSION='${P9K_AWS_PROFILE//\%/%%}${P9K_AWS_REGION:+ ${P9K_AWS_REGION//\%/%%}}'
+  # typeset -g POWERLEVEL9K_AWS_CONTENT_EXPANSION='${P9K_CONTENT}${AWS_EXPIRATION}'
 
   #[ aws_eb_env: aws elastic beanstalk environment (https://aws.amazon.com/elasticbeanstalk/) ]#
   # AWS Elastic Beanstalk environment color.
@@ -1597,7 +1614,7 @@
   #   - verbose: Enable instant prompt and print a warning when detecting console output during
   #              zsh initialization. Choose this if you've never tried instant prompt, haven't
   #              seen the warning, or if you are unsure what this all means.
-  typeset -g POWERLEVEL9K_INSTANT_PROMPT=verbose
+  typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
   # Hot reload allows you to change POWERLEVEL9K options after Powerlevel10k has been initialized.
   # For example, you can type POWERLEVEL9K_BACKGROUND=red and see your prompt turn red. Hot reload
