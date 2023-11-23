@@ -8,3 +8,4 @@
 .dotest
 workspace
 .DS_Store
+.vscode

@@ -6,7 +6,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # My bin should be first, rvm should be last
-export PATH="$HOME/bin:/usr/local/opt/node@10/bin:$PATH:$HOME/.rvm/bin"
+export PATH="$HOME/bin:$HOME/go/bin:$PATH:$HOME/.rvm/bin"
+# export PATH="$HOME/bin:/usr/local/go/bin:$HOME/go/bin:$PATH:$HOME/.rvm/bin"
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/bobgardner/.oh-my-zsh"
@@ -81,7 +82,7 @@ POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(brew bundler command-not-found docker encode64 gem git git-hubflow golang mercurial mvn nvm rails rake rand-quote tldr tmux vi-mode vundle)
 
-NVM_AUTOLOAD=1
+zstyle ':omz:plugins:nvm' autoload true
 ZSH_TMUX_AUTOSTART=true
 ZSH_TMUX_AUTOCONNECT=true
 ZSH_TMUX_UNICODE=true
@@ -98,7 +99,7 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
 
-export EDITOR='vim'
+export EDITOR='nvim'
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 # Make less more friendly for non-text input files, see lesspipe(1)
@@ -108,7 +109,8 @@ export LESS="-RSMqi"
 alias glog='git log --pretty=format:"%C(auto)%h%d (%ar) %s" --graph'
 alias gloga='glog --all'
 alias ptree='ps -aef --forest'
-alias vi=vim
+alias vi=nvim
+alias vim=nvim
 alias la='ls -A'
 alias lal='ls -A -l'
 # Print a 'ruler' to help count characters
