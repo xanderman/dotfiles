@@ -13,7 +13,7 @@ Plugin('RRethy/nvim-treesitter-endwise')
 Plugin('lukas-reineke/indent-blankline.nvim')
 Plugin('stevearc/aerial.nvim')
 
-Plugin('nvim-telescope/telescope.nvim', {tag = '0.1.0'})
+Plugin('nvim-telescope/telescope.nvim', {branch = '0.1.x'})
 
 Plugin('ycm-core/YouCompleteMe', {['do'] = 'python3 install.py --all'})
 vim.g.ycm_language_server = {
