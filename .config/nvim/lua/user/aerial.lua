@@ -1,6 +1,8 @@
 require('telescope').load_extension('aerial')
+vim.keymap.set("n", "<leader>fa", "<cmd>Telescope aerial<CR>")
 
 -- Copied from README
+-- TODO: I'm not using this outside telescope, so I don't think this is necessary?
 require("aerial").setup({
   -- Priority list of preferred backends for aerial.
   -- This can be a filetype map (see :help aerial-filetype-map)

@@ -1,3 +1,6 @@
+-- plugins that don't need setup
+require('nvim-web-devicons').setup {}
+
 require('user.settings')
 require('user.mappings')
 require('user.au')

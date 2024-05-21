@@ -12,6 +12,7 @@ Plugin('nvim-treesitter/nvim-treesitter', {['do'] = ':TSUpdate'})
 Plugin('RRethy/nvim-treesitter-endwise')
 Plugin('lukas-reineke/indent-blankline.nvim')
 Plugin('stevearc/aerial.nvim')
+Plugin('nvim-tree/nvim-web-devicons')
 
 Plugin('nvim-telescope/telescope.nvim', {branch = '0.1.x'})
 
@@ -78,7 +79,7 @@ Plugin('google/vim-selector')
 -- Plugin 'prabirshrestha/async.vim'
 -- Plugin 'prabirshrestha/vim-lsp'
 -- Plugin 'natebosch/vim-lsc'
-Plugin 'altercation/vim-colors-solarized'
+Plugin('altercation/vim-colors-solarized')
 -- Plugin 'nacitar/terminalkeys.vim'
 -- Plugin 'sjl/gundo.vim'
 -- Plugin 'sjl/splice.vim'
